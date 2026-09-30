@@ -78,8 +78,91 @@ export default function TermsPage() {
         <h2>24. Complaints and disputes</h2>
         <p>Please contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a> first with the transaction reference, relevant dates, and a clear description of the issue. We will review complaints in good faith. Any mandatory consumer rights and mandatory laws of your place of residence remain unaffected.</p>
 
-        <h2>25. Contact</h2>
-        <p>For questions, offers, ownership evidence, or complaints, contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a>. These website terms are a general draft and are not a substitute for advice from a qualified lawyer for your jurisdiction.</p>
+        <h2>25. Transaction stages</h2>
+        <p>A typical transaction may include an initial inquiry, a preliminary review, a request for additional information, an indicative valuation, identity or ownership checks, a final written offer, transfer instructions, technical verification, payment, and post-payment recordkeeping. These stages are illustrative only. Rovera may combine, reorder, add, or omit stages depending on the digital good, the risk level, the payment method, and the requirements of a third-party platform.</p>
+        <p>An initial message, automated response, estimated range, or request for evidence does not mean that Rovera has accepted an offer. You should not transfer an account or item before receiving written confirmation of the exact transaction terms and the transfer method.</p>
+
+        <h2>26. Information in an offer</h2>
+        <p>An offer should accurately identify the digital good, the relevant platform, region or currency restrictions, creation date where known, usage history, current condition, included items, linked services, recovery options, bans, warnings, disputes, previous ownership, and any limitation on transfer. If a fact is unknown, state that it is unknown instead of guessing.</p>
+        <p>Rovera may rely on information supplied by the User when deciding whether to review or price an offer. A failure to mention a material fact may be treated as a misrepresentation even if the User did not understand its importance at the time.</p>
+
+        <h2>27. Ownership representations</h2>
+        <p>By submitting an offer, you represent that you have the right to submit it, that no other person has a superior claim that you know about, that the digital good was not obtained through unauthorized access, and that the transfer will not infringe another person’s rights. You also represent that you are not acting as an undisclosed agent for a person who is prohibited from using Rovera.</p>
+        <p>If you are submitting on behalf of a company, team, family member, or other person, you must have authority to do so. Rovera may require confirmation from the owner or authorized representative before continuing.</p>
+
+        <h2>28. Verification materials</h2>
+        <p>Verification may include purchase receipts, platform messages, account history, ownership records, screenshots, device or region information, business records, or other reasonable evidence. Evidence must be genuine, current, and relevant to the offer. Editing an image or document in a way that changes its meaning is prohibited.</p>
+        <p>We will try to avoid requesting unnecessary sensitive information. Where possible, redact passwords, payment-card numbers, recovery codes, private keys, personal messages, and information about unrelated people before sending documents.</p>
+
+        <h2>29. Identity and compliance checks</h2>
+        <p>Rovera may request identity, age, address, beneficial-owner, payment-owner, or business information when needed to prevent fraud, comply with payment-provider rules, meet legal obligations, or assess a transaction risk. A User who refuses a required check may be unable to complete the transaction.</p>
+        <p>Information supplied for a compliance check must be truthful and belong to the person represented. Submitting another person’s identity document, using a false address, or attempting to defeat a verification control may result in rejection, suspension, or reporting where appropriate.</p>
+
+        <h2>30. Security and account credentials</h2>
+        <p>Rovera will not ask you to bypass a platform’s login security or provide credentials through an unsafe channel. If credentials are necessary for a confirmed transfer, we will specify the approved method and the minimum information needed. You remain responsible for securing your devices, email account, recovery methods, and communications.</p>
+        <p>You must not send a password, authentication code, backup code, private key, or similar secret in an ordinary public message. If you accidentally disclose a secret, change it immediately and notify the relevant platform.</p>
+
+        <h2>31. Transfer instructions</h2>
+        <p>A confirmed transaction may include detailed steps for removing personal information, unlinking payment methods, transferring administrative rights, changing recovery details, or delivering a digital item. You must follow those steps accurately and promptly. Do not remove evidence or change a good in a way that makes verification impossible unless the transfer instructions require it.</p>
+        <p>Rovera may pause payment until the recipient can reasonably access and verify the agreed good. If a platform requires a waiting period or limits a transfer, the parties may agree on a different process or cancel the transaction.</p>
+
+        <h2>32. Digital accounts</h2>
+        <p>An account may contain personal data, linked identities, subscriptions, payment methods, user-generated content, moderation history, licenses, or other rights that cannot lawfully be transferred. You must remove information that belongs to you or another person where appropriate, and you must not transfer data that you do not have permission to disclose.</p>
+        <p>Rovera does not guarantee that an account can be transferred merely because a User can technically provide access. The relevant platform’s rules, the account’s history, and the rights of other users control whether an account is acceptable.</p>
+
+        <h2>33. Virtual items and digital entitlements</h2>
+        <p>Virtual currency, skins, items, codes, subscriptions, licenses, usernames, communities, and similar entitlements may be limited by region, platform, expiry date, account status, or a non-transferable license. You must disclose expiry dates, redemption restrictions, activation history, region locks, and any previous use known to you.</p>
+        <p>Rovera is not the issuer of a third-party code, license, item, or virtual currency unless a separate written agreement says otherwise. The issuer may apply its own rules, technical restrictions, or cancellation rights.</p>
+
+        <h2>34. Valuation and market information</h2>
+        <p>Any valuation is an estimate based on information available at the time. It may consider demand, rarity, condition, region, platform risk, transferability, history, verification cost, fraud risk, market liquidity, and expected resale restrictions. A valuation is not an appraisal, investment recommendation, or guarantee of future value.</p>
+        <p>Market prices can change quickly. Rovera may update, withdraw, or revise an indicative price before written confirmation if new information appears or the market changes materially.</p>
+
+        <h2>35. Communication rules</h2>
+        <p>Communications should remain accurate, respectful, and relevant to the transaction. Do not send spam, threats, malicious files, impersonation attempts, abusive content, or links intended to steal information. We may limit communication channels or block messages that create a security or operational risk.</p>
+        <p>Important transaction instructions should be confirmed through the official Rovera contact method. Rovera is not responsible for a payment or transfer made to an impersonator because a User relied on an unofficial account, modified email, or external message.</p>
+
+        <h2>36. Payments and payment providers</h2>
+        <p>Payments may be processed by banks, payment processors, electronic-money institutions, or other intermediaries. Those providers may apply separate terms, identity checks, transaction limits, settlement times, currency conversions, or fees. A payment is considered complete only when the relevant provider confirms settlement or when Rovera confirms receipt, depending on the agreed method.</p>
+        <p>Do not use another person’s payment method without authorization. Rovera may delay or reject a payment that is reversed, disputed, mismatched with the User, subject to a security alert, or inconsistent with the confirmed transaction.</p>
+
+        <h2>37. Taxes and records</h2>
+        <p>Prices and payments may be affected by taxes, withholding, reporting requirements, or payment-provider deductions. Rovera may request information needed to prepare records or meet a legal obligation. Each User is responsible for determining and meeting the tax obligations that apply to their income, business, location, and transaction.</p>
+        <p>Business Users should keep their own invoices, receipts, valuation records, and evidence of ownership. Nothing on the website is tax advice.</p>
+
+        <h2>38. Anti-fraud and financial crime controls</h2>
+        <p>Rovera may use technical, manual, and third-party checks to identify account takeover, stolen goods, payment abuse, collusion, unusual activity, duplicate offers, false identity, sanctions concerns, or other financial crime risks. A review may take time and we may be unable to disclose all detection criteria because doing so could reduce security.</p>
+        <p>Where permitted or required, Rovera may share relevant information with payment providers, platforms, professional advisers, insurers, law-enforcement agencies, regulators, or affected persons. We may preserve records while a concern is investigated.</p>
+
+        <h2>39. Third-party services and content</h2>
+        <p>The website may contain links, names, logos, descriptions, or references belonging to third-party platforms. Those references do not mean that Rovera is endorsed by, affiliated with, or authorized by the platform. The third party controls its service, content, policies, outages, moderation, account decisions, and data practices.</p>
+        <p>You must read and follow the rules that apply to your use of a third-party service. A third-party platform may take action even when a transaction with Rovera was completed, and Rovera cannot reverse a decision that only the platform can change.</p>
+
+        <h2>40. Confidentiality</h2>
+        <p>Each party should protect non-public information received in connection with an offer or transaction and use it only for the relevant purpose. This does not prevent disclosure to service providers, advisers, payment providers, insurers, regulators, courts, or authorities where reasonably necessary or legally required.</p>
+        <p>Confidentiality does not apply to information that is already public, was lawfully known before disclosure, is independently developed, or must be disclosed under law. A User must not publish private conversations, documents, or identifying information about another person without a lawful basis.</p>
+
+        <h2>41. Indemnity</h2>
+        <p>To the extent allowed by law, a User is responsible for losses, claims, costs, and reasonable expenses caused by the User’s fraud, unlawful conduct, material misrepresentation, infringement of another person’s rights, unauthorized transfer, misuse of the website, or breach of these Terms.</p>
+        <p>This section does not require a User to compensate Rovera for losses caused by Rovera’s own conduct to the extent that applicable law prohibits such an allocation.</p>
+
+        <h2>42. Events outside reasonable control</h2>
+        <p>Rovera is not responsible for delay or failure caused by events outside reasonable control, including platform outages, payment-network failures, internet or hosting failures, cyberattacks, strikes, natural disasters, war, government action, changes in law, or the acts of a third party. We will take reasonable steps to resume affected service when practical.</p>
+
+        <h2>43. Notices and electronic records</h2>
+        <p>You agree that notices may be delivered electronically to the address or account information you provide, or posted on the relevant website page. Electronic records, confirmations, and communications may be used to evidence the transaction, subject to applicable law and any required authentication.</p>
+
+        <h2>44. Changes, severability, and assignment</h2>
+        <p>We may update these Terms for legal, security, operational, or service reasons. If a provision is invalid or unenforceable, the remaining provisions continue and the invalid provision will be interpreted as closely as legally possible to its intended purpose. You may not transfer your rights or obligations without written consent. Rovera may transfer its rights and obligations as part of a reorganization, sale, or service transition, subject to applicable law.</p>
+
+        <h2>45. Governing law and consumer protection</h2>
+        <p>These Terms are interpreted under the law that applies to the Rovera operator and the transaction, without removing mandatory consumer protections that apply to you. Nothing here prevents you from using a mandatory complaint, mediation, or court process available in your place of residence.</p>
+
+        <h2>46. Entire agreement</h2>
+        <p>These Terms, the Privacy Policy, the Refund Policy, and any written transaction confirmation form the agreement relating to the website and the relevant transaction. A waiver is effective only when made by the party entitled to give it. A failure to enforce a provision immediately does not waive the right to enforce it later.</p>
+
+        <h2>47. Contact</h2>
+        <p>For questions, offers, ownership evidence, complaints, or notices, contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a>. These website terms are a general draft and are not a substitute for advice from a qualified lawyer for your jurisdiction.</p>
       </article>
     </main>
   )

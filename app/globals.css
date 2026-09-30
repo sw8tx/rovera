@@ -570,3 +570,22 @@ body {
   height: 68px;
   object-fit: contain;
 }
+
+/* Neutral monochrome marketplace palette. */
+.marketplace-page { background: #0c0c0c; color: #f2f2f2; }
+.marketplace-nav { border-bottom-color: #303030; background: rgba(12, 12, 12, .96); }
+.main-links a.active::after { background: #d9d9d9; }
+.profile-button { border-color: #8a8a8a; }
+.nav-action span { color: #c4c4c4; }
+.marketplace-hero { border-color: #383838; background: #181818; }
+.marketplace-hero h1 span { color: #bdbdbd; }
+.eyebrow { color: #a4a4a4; }
+.hero-button { background: #eeeeee; color: #111111; box-shadow: none; }
+.section-heading > a { color: #b0b0b0; }
+.category-card, .product-card, .benefit-card { border-color: #353535; background: #171717; }
+.category-card:hover, .product-card:hover { border-color: #858585; }
+.category-icon { color: #e2e2e2; text-shadow: none; }
+.product-art, .product-card.green .product-art, .product-card.red .product-art, .product-card.pink .product-art, .product-card.blue .product-art { background: #252525; }
+.product-art strong { color: #eeeeee; text-shadow: none; }
+.product-card > button { border-color: #555555; background: #303030; }
+.benefit-icon { border-color: #5b5b5b; background: #292929; color: #e1e1e1; }

@@ -36,7 +36,25 @@ export default function PrivacyPage() {
         <h2>10. Children</h2>
         <p>Rovera is not directed to children who cannot legally enter into the relevant transaction. We do not knowingly request unnecessary personal information from children. If you believe a child has provided information, contact us so we can review and delete it where appropriate.</p>
 
-        <h2>11. Changes and contact</h2>
+        <h2>11. Cookies and local storage</h2>
+        <p>Rovera uses necessary browser storage to remember your cookie-consent choice and to support basic website functionality. Optional analytics and marketing categories are shown in the consent interface but are not currently active by default. You can clear local storage through your browser settings.</p>
+
+        <h2>12. Service providers</h2>
+        <p>We may use carefully selected providers for hosting, security, email, payments, fraud prevention, customer support, and document storage. These providers may process information only as needed to provide their services to Rovera and under their own applicable terms.</p>
+
+        <h2>13. International processing</h2>
+        <p>Depending on where Rovera and its providers operate, information may be processed in countries other than your own. Where required, we will use a legally recognized transfer mechanism and appropriate safeguards for international transfers.</p>
+
+        <h2>14. Transaction records</h2>
+        <p>We may retain offer details, verification notes, payment records, communications, and dispute information for as long as needed to complete a transaction, prevent fraud, meet accounting or legal requirements, and establish or defend legal claims.</p>
+
+        <h2>15. Automated tools</h2>
+        <p>We may use automated tools to organize inquiries, identify suspicious activity, or assist support. We do not intend to make solely automated decisions that produce legal or similarly significant effects without appropriate review where required by law.</p>
+
+        <h2>16. Third-party links</h2>
+        <p>The website may refer to third-party platforms or services. Their privacy practices are controlled by their own policies, not this one. Review the policies of any platform before sending information or transferring an account or item.</p>
+
+        <h2>17. Changes and contact</h2>
         <p>We may update this Policy from time to time. The updated version will be posted here with a new date. Privacy questions and requests can be sent to <a href="mailto:help@rovera.xyz">help@rovera.xyz</a>. This page is a general website draft and is not legal advice.</p>
       </article>
     </main>

@@ -42,7 +42,43 @@ export default function TermsPage() {
         <h2>12. Changes</h2>
         <p>We may update these Terms when our service, legal obligations, or transaction process changes. The current version will be posted on this page. A change will not retroactively alter a transaction that has already been confirmed unless the law requires it or the parties agree otherwise.</p>
 
-        <h2>13. Contact</h2>
+        <h2>13. Definitions</h2>
+        <p>In these Terms, “Rovera”, “we”, and “us” refer to the operator of the Rovera website and acquisition service. “User” means anyone who visits the website, sends an inquiry, submits an offer, or participates in a transaction. “Digital good” includes an account, item, entitlement, code, username, community, service, or other electronically delivered product.</p>
+
+        <h2>14. Website access</h2>
+        <p>You are responsible for having a suitable device, internet connection, browser, and email address. We may change, suspend, restrict, or discontinue parts of the website for maintenance, security, legal, or operational reasons. We do not guarantee uninterrupted availability.</p>
+
+        <h2>15. User accounts and communications</h2>
+        <p>If we provide an account or ticket area, you must keep access details confidential and provide accurate information. Communications sent to the email address or contact method you provide may be treated as communications to you. You must notify us promptly if you suspect unauthorized access.</p>
+
+        <h2>16. Listings and descriptions</h2>
+        <p>Any category, example, description, image, or estimated value on the website is for information only. It does not guarantee that Rovera will buy a particular good or that a third-party platform will continue to support it. The final description and conditions are those confirmed for the individual transaction.</p>
+
+        <h2>17. Fees, taxes, and currency</h2>
+        <p>Unless expressly agreed otherwise, Rovera does not charge a fee merely for sending an inquiry. Transaction-specific fees, payment costs, currency conversion costs, taxes, or deductions will be disclosed before confirmation where they apply. You are responsible for tax, reporting, and business obligations that apply to your activity.</p>
+
+        <h2>18. Intellectual property</h2>
+        <p>The Rovera name, logo, website design, text, software, and other website materials belong to Rovera or its licensors. You may use the website only for its intended purpose. You may not copy, scrape, reverse engineer, frame, resell, or commercially exploit the website or its materials without written permission.</p>
+
+        <h2>19. User submissions</h2>
+        <p>You remain responsible for the legality and accuracy of information you submit. You grant Rovera a limited right to use submitted information as reasonably necessary to review offers, communicate with you, process a transaction, prevent abuse, and comply with law. Do not submit content that infringes another person’s rights or contains unnecessary confidential information.</p>
+
+        <h2>20. Fraud, abuse, and investigations</h2>
+        <p>We may delay, reject, suspend, or cancel an offer while investigating suspected fraud, unauthorized access, false information, payment abuse, sanctions concerns, money laundering, account recovery activity, or a violation of these Terms. We may preserve relevant records and cooperate with payment providers, platforms, or authorities where legally permitted.</p>
+
+        <h2>21. Suspension and termination</h2>
+        <p>We may restrict or end your access if you breach these Terms, create a security or legal risk, provide misleading information, or use the service unlawfully. Ending access does not remove obligations that arose before termination, including payment, confidentiality, dispute, recordkeeping, and cooperation obligations.</p>
+
+        <h2>22. Disclaimers</h2>
+        <p>Except where a mandatory legal guarantee applies, the website and review service are provided on an “as available” basis. We do not promise that an offer will be accepted, that a transaction will be profitable, or that a third-party service will remain available. We do not provide legal, tax, investment, or platform-policy advice.</p>
+
+        <h2>23. Liability</h2>
+        <p>Nothing in these Terms excludes liability that cannot legally be excluded, including liability for fraud or other matters that must remain available under applicable law. Subject to that limitation, Rovera is not responsible for indirect loss, lost opportunity, loss of market value, third-party platform decisions, or events outside our reasonable control.</p>
+
+        <h2>24. Complaints and disputes</h2>
+        <p>Please contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a> first with the transaction reference, relevant dates, and a clear description of the issue. We will review complaints in good faith. Any mandatory consumer rights and mandatory laws of your place of residence remain unaffected.</p>
+
+        <h2>25. Contact</h2>
         <p>For questions, offers, ownership evidence, or complaints, contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a>. These website terms are a general draft and are not a substitute for advice from a qualified lawyer for your jurisdiction.</p>
       </article>
     </main>

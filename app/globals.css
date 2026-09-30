@@ -524,3 +524,49 @@ body {
 @media (max-width: 1200px) { .main-links { gap: 15px; } .main-links a:nth-child(n+6) { display: none; } .category-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 800px) { .marketplace-nav { gap: 16px; padding: 0 18px; } .main-links { display: none; } .nav-action { display: none; } .marketplace-content { padding: 18px; } .marketplace-hero { min-height: 300px; padding: 32px 24px; } .hero-orbit { right: -20%; opacity: .45; } .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .benefit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .search-box { width: 145px; } .profile-button { padding: 8px 10px; font-size: 0; } .profile-button span { font-size: 20px; } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .benefit-grid { grid-template-columns: 1fr; } .marketplace-footer { flex-direction: column; gap: 15px; } }
+
+/* Keep the marketplace grounded and product-focused. */
+.marketplace-hero {
+  background: #111820;
+}
+
+.marketplace-hero::after {
+  display: none;
+}
+
+.hero-orbit {
+  opacity: .17;
+  filter: grayscale(1);
+}
+
+.category-card,
+.product-card,
+.benefit-card {
+  background: #121a23;
+}
+
+.category-card:hover,
+.product-card:hover {
+  transform: none;
+  border-color: #65748b;
+}
+
+.category-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.product-art,
+.product-card.green .product-art,
+.product-card.red .product-art,
+.product-card.pink .product-art,
+.product-card.blue .product-art {
+  background: #1b2631;
+}
+
+.product-art img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+}

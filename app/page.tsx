@@ -1,20 +1,20 @@
 const categories = [
-  { icon: '◈', name: 'Rocket League', meta: 'Items · Accounts · Credits' },
-  { icon: '◉', name: 'Discord', meta: 'Nitro · Accounts · Boosts' },
-  { icon: '◇', name: 'Roblox', meta: 'Robux · Accounts · Items' },
-  { icon: '▣', name: 'Minecraft', meta: 'Accounts · Keys · Items' },
-  { icon: '▰', name: 'CS2', meta: 'Skins · Accounts · Keys' },
-  { icon: '♪', name: 'TikTok', meta: 'Accounts · Followers · Likes' },
-  { icon: '◎', name: 'Instagram', meta: 'Accounts · Followers · Likes' },
-  { icon: '●', name: 'Steam', meta: 'Accounts · Keys · Wallet' },
+  { icon: '/icons/rocketleague.svg', name: 'Rocket League', meta: 'Items · Accounts · Credits' },
+  { icon: '/icons/discord.svg', name: 'Discord', meta: 'Nitro · Accounts · Boosts' },
+  { icon: '/icons/roblox.svg', name: 'Roblox', meta: 'Robux · Accounts · Items' },
+  { icon: '/icons/minecraft.svg', name: 'Minecraft', meta: 'Accounts · Keys · Items' },
+  { icon: '/icons/counterstrike.svg', name: 'CS2', meta: 'Skins · Accounts · Keys' },
+  { icon: '/icons/tiktok.svg', name: 'TikTok', meta: 'Accounts · Followers · Likes' },
+  { icon: '/icons/instagram.svg', name: 'Instagram', meta: 'Accounts · Followers · Likes' },
+  { icon: '/icons/steam.svg', name: 'Steam', meta: 'Accounts · Keys · Wallet' },
 ]
 
 const products = [
-  { icon: '▣', category: 'Minecraft', name: 'Premium Account', price: '$14.99', tone: 'green' },
-  { icon: '▰', category: 'CS2', name: 'AK-47 | Redline (FT)', price: '$18.99', tone: 'red' },
-  { icon: '♪', category: 'TikTok', name: '10,000 Followers', price: '$12.99', tone: 'pink' },
-  { icon: '◎', category: 'Instagram', name: '5,000 Followers', price: '$8.99', tone: 'purple' },
-  { icon: '●', category: 'Steam', name: 'Steam Wallet Code', price: '$19.99', tone: 'blue' },
+  { icon: '/icons/minecraft.svg', category: 'Minecraft', name: 'Premium Account', price: '$14.99', tone: 'green' },
+  { icon: '/icons/counterstrike.svg', category: 'CS2', name: 'AK-47 | Redline (FT)', price: '$18.99', tone: 'red' },
+  { icon: '/icons/tiktok.svg', category: 'TikTok', name: '10,000 Followers', price: '$12.99', tone: 'pink' },
+  { icon: '/icons/instagram.svg', category: 'Instagram', name: '5,000 Followers', price: '$8.99', tone: 'purple' },
+  { icon: '/icons/steam.svg', category: 'Steam', name: 'Steam Wallet Code', price: '$19.99', tone: 'blue' },
 ]
 
 const benefits = [
@@ -63,12 +63,12 @@ export default function Page() {
 
         <div className="section-heading"><div><p className="eyebrow">BROWSE BY PLATFORM</p><h2>Find what you need</h2></div><a href="#products">View all <span>→</span></a></div>
         <div className="category-grid">
-          {categories.map((category) => <a className="category-card" id={category.name.toLowerCase().replaceAll(' ', '-')} href="#products" key={category.name}><span className="category-icon">{category.icon}</span><strong>{category.name}</strong><small>{category.meta}</small><b>›</b></a>)}
+          {categories.map((category) => <a className="category-card" id={category.name.toLowerCase().replaceAll(' ', '-')} href="#products" key={category.name}><span className="category-icon"><img src={category.icon} alt="" /></span><strong>{category.name}</strong><small>{category.meta}</small><b>›</b></a>)}
         </div>
 
         <div className="section-heading products-heading" id="products"><div><p className="eyebrow">FEATURED TODAY</p><h2>Popular digital goods</h2></div><a href="#marketplace">View all <span>→</span></a></div>
         <div className="product-grid">
-          {products.map((product) => <a className={`product-card ${product.tone}`} href="#product" key={product.name}><div className="product-art"><span className="product-label">{product.category}</span><strong>{product.icon}</strong></div><div className="product-info"><span>{product.name}</span><b>{product.price}</b></div><button aria-label={`Add ${product.name} to cart`}>＋</button></a>)}
+          {products.map((product) => <a className={`product-card ${product.tone}`} href="#product" key={product.name}><div className="product-art"><span className="product-label">{product.category}</span><img src={product.icon} alt="" /></div><div className="product-info"><span>{product.name}</span><b>{product.price}</b></div><button aria-label={`Add ${product.name} to cart`}>＋</button></a>)}
         </div>
 
         <div className="section-heading why-heading"><div><p className="eyebrow">WHY ROVERA</p><h2>A simpler way to buy digital goods.</h2></div></div>

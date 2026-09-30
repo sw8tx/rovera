@@ -46,7 +46,9 @@ export default function TermsPage() {
         <p>In these Terms, “Rovera”, “we”, and “us” refer to the operator of the Rovera website and acquisition service. “User” means anyone who visits the website, sends an inquiry, submits an offer, or participates in a transaction. “Digital good” includes an account, item, entitlement, code, username, community, service, or other electronically delivered product.</p>
 
         <h2>14. Website access</h2>
-        <p>You are responsible for having a suitable device, internet connection, browser, and email address. We may change, suspend, restrict, or discontinue parts of the website for maintenance, security, legal, or operational reasons. We do not guarantee uninterrupted availability.</p>
+        <p>You are responsible for having a suitable device, internet connection, browser, enabled JavaScript, supported cookies, and an email address that you can access reliably. You are also responsible for checking that messages from Rovera are not filtered, blocked, or redirected by your provider, and for keeping your device and email account protected against unauthorized access.</p>
+        <p>We may change, suspend, restrict, or discontinue parts of the website for maintenance, security, legal, or operational reasons, including when a third-party provider changes its service, when we need to investigate an incident, or when a feature creates an unacceptable risk. We may limit access by region, account, device, transaction type, or risk category, and may apply technical controls such as rate limits, verification steps, or temporary holds.</p>
+        <p>We do not guarantee uninterrupted availability, a particular response time, compatibility with every browser or device, or that every page will remain available for a particular period. A temporary outage does not cancel a confirmed transaction unless the parties agree or applicable law requires that result.</p>
 
         <h2>15. User accounts and communications</h2>
         <p>If we provide an account or ticket area, you must keep access details confidential and provide accurate information. Communications sent to the email address or contact method you provide may be treated as communications to you. You must notify us promptly if you suspect unauthorized access.</p>
@@ -162,7 +164,9 @@ export default function TermsPage() {
         <p>These Terms, the Privacy Policy, the Refund Policy, and any written transaction confirmation form the agreement relating to the website and the relevant transaction. A waiver is effective only when made by the party entitled to give it. A failure to enforce a provision immediately does not waive the right to enforce it later.</p>
 
         <h2>47. Contact</h2>
-        <p>For questions, offers, ownership evidence, complaints, or notices, contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a>. These website terms are a general draft and are not a substitute for advice from a qualified lawyer for your jurisdiction.</p>
+        <p>For questions, offers, ownership evidence, complaints, refund requests, privacy requests, or formal notices, contact <a href="mailto:help@rovera.xyz">help@rovera.xyz</a>. Include the email address used for the relevant inquiry, any transaction or support reference, the dates involved, the platform or digital good concerned, and a clear description of what you are asking us to review. Do not send passwords, authentication codes, private keys, or unrelated personal information by ordinary email.</p>
+        <p>We may ask you to confirm ownership of the contact address or provide additional information before discussing a transaction, changing transfer instructions, releasing information, or responding to a request that could affect another person. A message is not a confirmed offer, payment instruction, or amendment to a transaction unless Rovera expressly confirms that result in writing.</p>
+        <p>These website terms are a general draft and are not a substitute for advice from a qualified lawyer for your jurisdiction. The operator’s legal name, registered address, complaint channel, governing law, and any mandatory consumer information should be completed and reviewed before the service is used commercially.</p>
       </article>
     </main>
   )

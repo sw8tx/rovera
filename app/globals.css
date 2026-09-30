@@ -74,8 +74,7 @@ body {
   color: #222222;
 }
 
-.legal-page::before,
-.legal-page::after {
+.legal-page::before {
   position: absolute;
   z-index: -1;
   content: "";
@@ -90,16 +89,6 @@ body {
   border-radius: 50% 50% 0 0 / 28% 28% 0 0;
   background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(205,205,205,.75));
   transform: rotate(-2deg);
-}
-
-.legal-page::after {
-  right: -18%;
-  bottom: -42%;
-  left: 28%;
-  height: 64%;
-  border-radius: 50% 50% 0 0 / 24% 24% 0 0;
-  background: rgba(255,255,255,.62);
-  transform: rotate(3deg);
 }
 
 .legal-page nav {

@@ -38,5 +38,6 @@ body {
   width: 48px;
   height: 48px;
   object-fit: contain;
+  filter: invert(1) grayscale(1) contrast(2);
   mix-blend-mode: multiply;
 }

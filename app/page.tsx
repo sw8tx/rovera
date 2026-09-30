@@ -1,9 +1,9 @@
 export default function Page() {
   return (
     <main className="rovera-page">
-      <div className="rovera-logo" aria-label="Rovera">
-        ROVERA
-      </div>
+      <header className="rovera-taskbar">
+        <img className="rovera-logo" src="/rovera-logo.png" alt="Rovera" />
+      </header>
     </main>
   )
 }

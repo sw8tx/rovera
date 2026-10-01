@@ -662,6 +662,16 @@ body {
 .blank-marketplace { min-height: calc(100vh - 155px); max-width: none; margin: 0; padding: 0; background: #fff; }
 .marketplace-page > .marketplace-footer { max-width: 1296px; margin: 0 auto; }
 .legacy-logo { width: 38px; height: 38px; border-radius: 9px; object-fit: cover; filter: invert(1); }
+.marketplace-page > .marketplace-footer { display: block; padding: 40px 0 28px; color: #707070; font-size: 12px; }
+.footer-main { display: grid; grid-template-columns: 2.2fr repeat(3, 1fr); gap: 44px; padding-bottom: 18px; }
+.footer-brand { display: flex; align-items: center; gap: 10px; color: #202020; font-size: 18px; }
+.footer-brand .brand-mark { width: 34px; height: 34px; font-size: 18px; }
+.footer-about p { margin: 10px 0 0; color: #777; line-height: 1.7; }
+.footer-column { display: flex; flex-direction: column; gap: 9px; }
+.footer-column strong { margin-bottom: 4px; color: #333; font-size: 11px; letter-spacing: .02em; }
+.footer-column a { color: #707070; text-decoration: none; }.footer-column a:hover { color: #171717; }
+.footer-bottom { display: flex; justify-content: space-between; padding-top: 18px; border-top: 1px solid #e1e1e1; color: #777; }
+@media (max-width: 700px) { .footer-main { grid-template-columns: 1fr 1fr; gap: 26px; }.footer-about { grid-column: 1 / -1; } }
 .hero-product-art img { width: 88%; height: 88%; object-fit: contain; opacity: 1; }
 .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .product-art img { width: 100%; height: 100%; max-width: 190px; max-height: 130px; object-fit: contain; opacity: 1; }

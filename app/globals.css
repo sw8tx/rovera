@@ -638,3 +638,21 @@ body {
 @media (max-width: 1300px) { .marketplace-content { padding-right: 32px; padding-left: 32px; }.marketplace-hero { margin-right: -32px; margin-left: -32px; padding-right: 64px; padding-left: 64px; } }
 @media (max-width: 900px) { .marketplace-nav { gap: 18px; padding: 0 20px; }.main-links { display: none; }.marketplace-content { padding-right: 20px; padding-left: 20px; }.marketplace-hero { margin-right: -20px; margin-left: -20px; padding: 48px 34px; }.hero-product { width: 270px; }.benefit-strip { grid-template-columns: 1fr 1fr; }.benefit-strip > div:first-child { grid-column: 1 / -1; }.category-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 650px) { .marketplace-nav { min-height: 68px; }.brand { font-size: 21px; }.search-box { width: 42px; padding: 0 10px; }.search-box input { display: none; }.cart-button { padding: 11px; font-size: 0; }.cart-button b { font-size: 13px; }.profile-link { display: none; }.marketplace-hero { display: block; padding: 40px 22px 46px; }.hero-product { width: auto; margin: 35px 0 0; }.marketplace-hero h1 { font-size: 43px; }.category-grid, .product-grid { grid-template-columns: repeat(2, 1fr); }.benefit-strip { grid-template-columns: 1fr; }.benefit-strip > div:first-child { grid-column: auto; }.section-heading > a { display: none; }.marketplace-footer { flex-direction: column; gap: 14px; } }
+
+/* Final polish: tighter rhythm, real icon tiles, and clearer product hierarchy. */
+.marketplace-hero { min-height: 350px; padding-top: 54px; padding-bottom: 54px; }
+.marketplace-hero::before { bottom: -58px; height: 105px; }
+.hero-product { width: 300px; }
+.hero-product-art { height: 160px; }
+.hero-product-art img { width: 112px; height: 112px; }
+.section-heading { margin-top: 66px; }
+.category-card { min-height: 96px; box-shadow: 0 2px 0 rgba(0,0,0,.02); }
+.category-icon { width: 48px; height: 48px; background: #f0f0f0; }
+.category-icon img { width: 31px; height: 31px; }
+.product-card { box-shadow: 0 3px 0 rgba(0,0,0,.025); }
+.product-art { min-height: 158px; }
+.product-art img { width: 86px; height: 86px; opacity: .78; }
+.product-card:nth-child(2) .product-art { background: #e4e4e4; }
+.product-card:nth-child(3) .product-art { background: #ededed; }
+.product-card:nth-child(4) .product-art { background: #e7e7e7; }
+.benefit-strip { border: 1px solid #e7e7e7; box-shadow: 0 2px 0 rgba(0,0,0,.02); }

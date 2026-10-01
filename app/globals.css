@@ -589,3 +589,52 @@ body {
 .product-art strong { color: #eeeeee; text-shadow: none; }
 .product-card > button { border-color: #555555; background: #303030; }
 .benefit-icon { border-color: #5b5b5b; background: #292929; color: #e1e1e1; }
+
+/* Rovera light marketplace layout. */
+.marketplace-page { background: #fff; color: #171717; font-family: Arial, Helvetica, sans-serif; }
+.marketplace-nav { position: sticky; top: 0; min-height: 82px; padding: 0 max(32px, calc((100vw - 1240px) / 2)); gap: 38px; border-bottom: 1px solid #e4e4e4; background: rgba(255,255,255,.96); color: #171717; backdrop-filter: blur(12px); }
+.brand { gap: 10px; color: #171717; font-size: 25px; letter-spacing: -.04em; }
+.brand-mark { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 10px; background: #171717; color: #fff; font-size: 20px; font-weight: 800; }
+.main-links { gap: 27px; }
+.main-links a, .nav-action { color: #666; font-size: 14px; }
+.main-links a:hover, .main-links a.active, .nav-action:hover { color: #171717; }
+.main-links a.active::after { bottom: -31px; height: 2px; background: #171717; }
+.nav-actions { gap: 18px; }
+.search-box { width: 275px; height: 42px; border: 1px solid #dadada; border-radius: 11px; background: #fff; color: #555; }
+.search-box span { font-size: 27px; transform: rotate(-20deg); }
+.search-box input { color: #171717; font-size: 13px; }
+.search-box input::placeholder { color: #888; }
+.cart-button { display: inline-flex; align-items: center; gap: 8px; padding: 13px 17px; border-radius: 11px; background: #171717; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.cart-button b { font-weight: 500; }
+.profile-link { color: #444; font-size: 13px; text-decoration: none; white-space: nowrap; }
+.marketplace-content { max-width: 1296px; padding: 0 0 30px; }
+.marketplace-hero { min-height: 390px; margin: 0 -100px; padding: 68px max(100px, calc((100vw - 1296px) / 2 + 58px)); border: 0; border-radius: 0; background: #f1f1f1; color: #171717; overflow: visible; isolation: isolate; }
+.marketplace-hero::before { position: absolute; z-index: -1; right: -12%; bottom: -95px; left: -12%; height: 160px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #fff; content: ""; }
+.hero-copy-block { position: relative; z-index: 1; }
+.eyebrow { color: #737373; font-size: 10px; letter-spacing: .1em; }
+.marketplace-hero h1 { color: #171717; font-size: clamp(42px, 5vw, 62px); line-height: .98; }
+.marketplace-hero h1 span { color: #777; }
+.hero-copy { max-width: 535px; margin: 18px 0 27px; color: #5d5d5d; font-size: 16px; line-height: 1.5; }
+.hero-actions { display: flex; align-items: center; gap: 12px; }
+.hero-button { padding: 14px 16px; border-radius: 10px; background: #171717; color: #fff; box-shadow: none; }
+.secondary-button { padding: 13px 17px; border: 1px solid #d1d1d1; border-radius: 10px; color: #333; font-size: 13px; font-weight: 700; text-decoration: none; }
+.availability-note { display: flex; align-items: center; gap: 9px; margin-top: 27px; color: #707070; font-size: 12px; }
+.availability-note span, .stock i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #818181; }
+.hero-product { width: 315px; margin-left: auto; padding: 16px 17px 22px; border: 1px solid #d7d7d7; border-radius: 20px; background: #fff; box-shadow: 0 8px 18px rgba(0,0,0,.03); }
+.hero-product-art { position: relative; display: grid; height: 175px; place-items: center; border-radius: 13px; background: #e8e8e8; }
+.hero-product-art span, .product-label { position: absolute; top: 13px; left: 13px; padding: 7px 16px; border-radius: 16px; background: #fff; color: #444; font-size: 9px; font-weight: 700; }
+.hero-product-art img { width: 105px; height: 105px; object-fit: contain; opacity: .7; }
+.hero-product small { display: block; margin-top: 14px; color: #777; font-size: 9px; }
+.hero-product h2 { margin: 7px 0 13px; font-size: 17px; }
+.hero-product > div:last-child { display: flex; align-items: center; justify-content: space-between; }
+.hero-product strong { font-size: 22px; }.hero-product > div:last-child span { color: #666; font-size: 10px; }
+.section-heading { margin: 88px 0 25px; }.section-heading h2 { color: #1b1b1b; font-size: 27px; }.section-heading > a { color: #4f4f4f; font-size: 13px; }.section-note { margin: 3px 0 0; color: #777; font-size: 13px; }
+.category-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.category-card { min-height: 90px; flex-direction: row; justify-content: flex-start; gap: 13px; padding: 16px; border: 1px solid #dedede; border-radius: 15px; background: #fff; color: #1b1b1b; text-align: left; }
+.category-card:hover { border-color: #999; transform: none; }.category-icon { width: 41px; height: 41px; border-radius: 11px; background: #f1f1f1; text-shadow: none; }.category-icon img { width: 25px; height: 25px; }.category-card > span:last-of-type { display: flex; flex-direction: column; gap: 7px; }.category-card strong { font-size: 13px; }.category-card small { color: #777; font-size: 10px; }.category-card b { display: none; }
+.products-heading { margin-top: 50px; }.product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }.product-card { border: 1px solid #ddd; border-radius: 15px; background: #fff; color: #171717; }.product-card:hover { border-color: #999; }.product-art { min-height: 148px; background: #e8e8e8; }.product-art img { width: 74px; height: 74px; opacity: .68; }.product-label { top: 13px; left: 13px; padding: 6px 13px; border: 0; color: #444; font-size: 9px; }.product-info { gap: 6px; padding: 16px 18px 18px; }.product-info strong { font-size: 14px; }.product-info small { color: #777; font-size: 10px; }.product-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }.stock { display: flex; align-items: center; gap: 7px; color: #666; font-size: 10px; }.product-bottom b { font-size: 18px; }
+.benefit-strip { display: grid; grid-template-columns: 1.2fr repeat(3, 1fr); gap: 22px; margin-top: 36px; padding: 26px 25px; border-radius: 17px; background: #f3f3f3; }.benefit-strip > div:first-child h2 { margin: 0 0 8px; font-size: 17px; }.benefit-strip > div:first-child p { max-width: 210px; margin: 0; color: #666; font-size: 11px; line-height: 1.45; }.benefit-card { min-height: auto; gap: 12px; padding: 5px 0; border: 0; background: transparent; }.benefit-icon { width: 23px; height: 23px; border: 0; background: transparent; color: #222; font-size: 16px; }.benefit-card h3 { margin: 3px 0 7px; color: #333; font-size: 12px; }.benefit-card p { color: #777; font-size: 10px; }
+.marketplace-footer { margin-top: 40px; padding: 23px 0 0; border-top: 1px solid #e1e1e1; color: #777; }.marketplace-footer a { color: #666; }
+@media (max-width: 1300px) { .marketplace-content { padding-right: 32px; padding-left: 32px; }.marketplace-hero { margin-right: -32px; margin-left: -32px; padding-right: 64px; padding-left: 64px; } }
+@media (max-width: 900px) { .marketplace-nav { gap: 18px; padding: 0 20px; }.main-links { display: none; }.marketplace-content { padding-right: 20px; padding-left: 20px; }.marketplace-hero { margin-right: -20px; margin-left: -20px; padding: 48px 34px; }.hero-product { width: 270px; }.benefit-strip { grid-template-columns: 1fr 1fr; }.benefit-strip > div:first-child { grid-column: 1 / -1; }.category-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 650px) { .marketplace-nav { min-height: 68px; }.brand { font-size: 21px; }.search-box { width: 42px; padding: 0 10px; }.search-box input { display: none; }.cart-button { padding: 11px; font-size: 0; }.cart-button b { font-size: 13px; }.profile-link { display: none; }.marketplace-hero { display: block; padding: 40px 22px 46px; }.hero-product { width: auto; margin: 35px 0 0; }.marketplace-hero h1 { font-size: 43px; }.category-grid, .product-grid { grid-template-columns: repeat(2, 1fr); }.benefit-strip { grid-template-columns: 1fr; }.benefit-strip > div:first-child { grid-column: auto; }.section-heading > a { display: none; }.marketplace-footer { flex-direction: column; gap: 14px; } }

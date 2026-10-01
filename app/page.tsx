@@ -1,8 +1,11 @@
 const categories = [
   { icon: '/icons/black/rocketleague.svg', name: 'Rocket League', meta: 'Items & Credits' },
+  { icon: '/icons/black/discord.svg', name: 'Discord', meta: 'Nitro & Boosts' },
   { icon: '/icons/black/roblox.svg', name: 'Roblox', meta: 'Items & Robux' },
   { icon: '/icons/black/counterstrike.svg', name: 'Counter-Strike 2', meta: 'Skins & Items' },
   { icon: '/icons/black/minecraft.svg', name: 'Minecraft', meta: 'Codes & Items' },
+  { icon: '/icons/black/tiktok.svg', name: 'TikTok', meta: 'Accounts & Likes' },
+  { icon: '/icons/black/instagram.svg', name: 'Instagram', meta: 'Accounts & Followers' },
   { icon: '/icons/black/steam.svg', name: 'Steam', meta: 'Wallet & Games' },
 ]
 
@@ -25,7 +28,7 @@ export default function Page() {
       <header className="marketplace-nav">
         <a className="brand" href="/" aria-label="Rovera home"><span className="brand-mark">R</span><span>Rovera</span></a>
         <nav className="main-links" aria-label="Marketplace categories">
-          <a className="active" href="#marketplace">Shop</a><a href="#rocket-league">Rocket League</a><a href="#roblox">Roblox</a><a href="#cs2">CS2</a><a href="#minecraft">Minecraft</a>
+          <a className="active" href="#marketplace">Shop</a><a href="#rocket-league">Rocket League</a><a href="#discord">Discord</a><a href="#roblox">Roblox</a><a href="#cs2">CS2</a><a href="#minecraft">Minecraft</a><a href="#tiktok">TikTok</a><a href="#instagram">Instagram</a><a href="#steam">Steam</a>
         </nav>
         <div className="nav-actions">
           <label className="search-box"><span aria-hidden="true">⌕</span><input aria-label="Search items" placeholder="Spiele, Items & Codes suchen" /></label>

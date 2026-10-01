@@ -658,3 +658,9 @@ body {
 .benefit-strip { border: 1px solid #e7e7e7; box-shadow: 0 2px 0 rgba(0,0,0,.02); }
 .category-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 900px) { .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.hero-product-art img { width: 88%; height: 88%; object-fit: contain; opacity: 1; }
+.product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.product-art img { width: 100%; height: 100%; max-width: 190px; max-height: 130px; object-fit: contain; opacity: 1; }
+.product-card:nth-child(5) .product-art { background: #ededed; }
+.product-card:nth-child(6) .product-art { background: #e4e4e4; }
+@media (max-width: 650px) { .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

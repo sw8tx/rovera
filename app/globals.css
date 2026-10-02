@@ -676,6 +676,13 @@ body {
 .marketplace-page > .marketplace-footer::before { position: absolute; z-index: -1; right: -8%; bottom: 36px; left: -8%; height: 105px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #d7d7d7; content: ""; transform: rotate(-2deg); }
 .marketplace-page > .marketplace-footer::after { position: absolute; z-index: -1; right: -10%; bottom: -54px; left: -10%; height: 150px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #171717; content: ""; transform: rotate(2deg); }
 @media (max-width: 700px) { .footer-main { grid-template-columns: 1fr 1fr; gap: 26px; }.footer-about { grid-column: 1 / -1; } }
+.marketplace-page > .marketplace-footer { max-width: none; margin-top: 0; padding: 190px max(32px, calc((100vw - 1296px) / 2)) 34px; background: #171717; color: #f5f5f5; }
+.marketplace-page > .marketplace-footer::before { z-index: 0; top: -102px; right: -8%; bottom: auto; left: -8%; width: 116%; height: 190px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #bdbdbd; transform: rotate(-2deg); }
+.marketplace-page > .marketplace-footer::after { z-index: 0; top: -58px; right: -10%; bottom: auto; left: -10%; width: 120%; height: 150px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #fff; transform: rotate(2deg); }
+.marketplace-page > .marketplace-footer .footer-main, .marketplace-page > .marketplace-footer .footer-bottom { position: relative; z-index: 1; }
+.marketplace-page > .marketplace-footer .footer-brand, .marketplace-page > .marketplace-footer .footer-column strong { color: #fff; }
+.marketplace-page > .marketplace-footer .footer-about p, .marketplace-page > .marketplace-footer .footer-column a, .marketplace-page > .marketplace-footer .footer-bottom { color: #c6c6c6; }
+.marketplace-page > .marketplace-footer .footer-bottom { border-top-color: #444; }
 .hero-product-art img { width: 88%; height: 88%; object-fit: contain; opacity: 1; }
 .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .product-art img { width: 100%; height: 100%; max-width: 190px; max-height: 130px; object-fit: contain; opacity: 1; }

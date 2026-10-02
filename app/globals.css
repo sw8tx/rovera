@@ -672,6 +672,9 @@ body {
 .footer-column strong { margin-bottom: 4px; color: #333; font-size: 11px; letter-spacing: .02em; }
 .footer-column a { color: #707070; text-decoration: none; }.footer-column a:hover { color: #171717; }
 .footer-bottom { display: flex; justify-content: space-between; padding-top: 18px; border-top: 1px solid #e1e1e1; color: #777; }
+.marketplace-page > .marketplace-footer { position: relative; isolation: isolate; overflow: hidden; padding-bottom: 150px; background: #fff; }
+.marketplace-page > .marketplace-footer::before { position: absolute; z-index: -1; right: -8%; bottom: 36px; left: -8%; height: 105px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #d7d7d7; content: ""; transform: rotate(-2deg); }
+.marketplace-page > .marketplace-footer::after { position: absolute; z-index: -1; right: -10%; bottom: -54px; left: -10%; height: 150px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: #171717; content: ""; transform: rotate(2deg); }
 @media (max-width: 700px) { .footer-main { grid-template-columns: 1fr 1fr; gap: 26px; }.footer-about { grid-column: 1 / -1; } }
 .hero-product-art img { width: 88%; height: 88%; object-fit: contain; opacity: 1; }
 .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

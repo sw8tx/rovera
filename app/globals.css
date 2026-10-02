@@ -662,7 +662,7 @@ body {
 .blank-marketplace { min-height: calc(100vh - 155px); max-width: none; margin: 0; padding: 0; background: #fff; }
 .marketplace-page > .marketplace-footer { max-width: 1296px; margin: 0 auto; }
 .legacy-logo { width: 38px; height: 38px; border-radius: 9px; object-fit: cover; filter: invert(1); }
-.brand-image { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; filter: invert(1); }
+.brand-image { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; filter: invert(1) grayscale(1) contrast(6); }
 .marketplace-page > .marketplace-footer { display: block; padding: 40px 0 28px; color: #707070; font-size: 12px; }
 .footer-main { display: grid; grid-template-columns: 2.2fr repeat(3, 1fr); gap: 44px; padding-bottom: 18px; }
 .footer-brand { display: flex; align-items: center; gap: 10px; color: #202020; font-size: 18px; }

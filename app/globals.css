@@ -683,6 +683,27 @@ body {
 .marketplace-page > .marketplace-footer .footer-brand, .marketplace-page > .marketplace-footer .footer-column strong { color: #fff; }
 .marketplace-page > .marketplace-footer .footer-about p, .marketplace-page > .marketplace-footer .footer-column a, .marketplace-page > .marketplace-footer .footer-bottom { color: #c6c6c6; }
 .marketplace-page > .marketplace-footer .footer-bottom { border-top-color: #444; }
+.login-button { border: 1px solid #bdbdbd; border-radius: 8px; padding: 10px 18px; background: #e2e2e2; color: #222; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; transition: background .2s, border-color .2s; }
+.login-button:hover { border-color: #8f8f8f; background: #d3d3d3; }
+.login-overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 20px; background: rgba(15,15,15,.42); }
+.login-modal { position: relative; width: min(470px, 100%); padding: 30px 30px 26px; border: 1px solid #d8d8d8; border-radius: 14px; background: #fff; color: #171717; box-shadow: 0 24px 80px rgba(0,0,0,.22); }
+.login-close { position: absolute; top: 13px; right: 16px; border: 0; background: transparent; color: #777; cursor: pointer; font-size: 25px; line-height: 1; }
+.login-kicker { margin: 0 0 8px; color: #777; font-size: 10px; font-weight: 700; letter-spacing: .12em; }
+.login-modal h2 { margin: 0 0 8px; font-size: 28px; letter-spacing: -.03em; }
+.login-copy { margin: 0 0 22px; color: #707070; font-size: 13px; line-height: 1.55; }
+.google-login, .email-login { display: flex; width: 100%; min-height: 44px; align-items: center; justify-content: center; gap: 10px; border-radius: 7px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
+.google-login { border: 1px solid #cfcfcf; background: #ededed; color: #222; }
+.google-login:hover { background: #e4e4e4; }
+.google-mark { display: grid; width: 19px; height: 19px; place-items: center; color: #4285f4; font-size: 17px; font-weight: 800; }
+.login-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #999; font-size: 12px; }
+.login-divider::before, .login-divider::after { height: 1px; flex: 1; background: #dedede; content: ""; }
+.login-label { display: block; margin-bottom: 7px; color: #444; font-size: 12px; font-weight: 700; }
+.login-input { width: 100%; min-height: 44px; padding: 0 13px; border: 1px solid #d4d4d4; border-radius: 7px; outline: 0; color: #171717; font: inherit; font-size: 13px; }
+.login-input:focus { border-color: #777; box-shadow: 0 0 0 3px rgba(120,120,120,.13); }
+.email-login { margin-top: 12px; border: 1px solid #222; background: #222; color: #fff; }
+.email-login:hover { background: #444; }
+.login-note { margin: 14px 0 0; color: #888; font-size: 11px; line-height: 1.45; text-align: center; }
+@media (max-width: 520px) { .login-button { padding: 9px 12px; }.login-modal { padding: 26px 20px 22px; } }
 .hero-product-art img { width: 88%; height: 88%; object-fit: contain; opacity: 1; }
 .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .product-art img { width: 100%; height: 100%; max-width: 190px; max-height: 130px; object-fit: contain; opacity: 1; }

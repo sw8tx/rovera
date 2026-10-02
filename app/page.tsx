@@ -2,7 +2,7 @@ export default function Page() {
   return (
     <main className="marketplace-page">
       <header className="marketplace-nav">
-        <a className="brand" href="/" aria-label="Rovera home"><span>Rovera</span></a>
+        <a className="brand" href="/" aria-label="Rovera home"><img className="brand-image" src="/rovera-logo.png" alt="Rovera logo" /><span>Rovera</span></a>
         <nav className="main-links" aria-label="Marketplace categories">
           <a className="active" href="#top">Shop</a><a href="#rocket-league">Rocket League</a><a href="#discord">Discord</a><a href="#roblox">Roblox</a><a href="#cs2">CS2</a><a href="#minecraft">Minecraft</a><a href="#tiktok">TikTok</a><a href="#instagram">Instagram</a><a href="#steam">Steam</a>
         </nav>

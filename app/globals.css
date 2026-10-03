@@ -689,6 +689,7 @@ body {
 .marketplace-page > .marketplace-footer .footer-main { gap: 52px; padding-bottom: 30px; }
 .marketplace-page > .marketplace-footer .footer-bottom { min-height: 44px; }
 .marketplace-page > .marketplace-footer::before { background: #bdbdbd url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 220' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 0H100V72C88 102 76 102 64 72C52 42 40 42 28 72C16 102 8 102 0 78Z'/%3E%3Cpath fill='%23bdbdbd' d='M0 78C8 102 16 102 28 72C40 42 52 42 64 72C76 102 88 102 100 72V220H0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.marketplace-page > .marketplace-footer::before { background: #171717 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 260' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 0H100V72C84 108 72 46 57 84C42 122 24 44 0 82Z'/%3E%3Cpath fill='%23bdbdbd' d='M0 82C24 44 42 122 57 84C72 46 84 108 100 72V126C82 96 68 145 50 112C32 80 16 145 0 122Z'/%3E%3Cpath fill='%236f6f6f' d='M0 122C16 145 32 80 50 112C68 145 82 96 100 126V260H0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .footer-bottom { align-items: center; gap: 18px; }
 .footer-badge { display: inline-flex; align-items: center; }
 .dmca-badge { display: inline-flex; align-items: center; }

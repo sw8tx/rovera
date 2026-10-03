@@ -698,7 +698,7 @@ body {
 .google-login, .email-login { display: flex; width: 100%; min-height: 44px; align-items: center; justify-content: center; gap: 10px; border-radius: 7px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
 .google-login { border: 1px solid #cfcfcf; background: #ededed; color: #222; }
 .google-login:hover { background: #e4e4e4; }
-.google-mark { display: grid; width: 19px; height: 19px; place-items: center; color: #4285f4; font-size: 17px; font-weight: 800; }
+.google-mark { display: block; width: 19px; height: 19px; object-fit: contain; }
 .login-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #999; font-size: 12px; }
 .login-divider::before, .login-divider::after { height: 1px; flex: 1; background: #dedede; content: ""; }
 .login-label { display: block; margin-bottom: 7px; color: #444; font-size: 12px; font-weight: 700; }

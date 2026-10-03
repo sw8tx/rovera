@@ -20,7 +20,7 @@ export default function LoginPanel() {
             <p className="login-kicker">ROVERA ACCOUNT</p>
             <h2 id="login-title">Welcome back</h2>
             <p className="login-copy">Sign in to manage your orders, saved items, and account details.</p>
-            <button className="google-login" type="button" onClick={() => { window.location.href = '/api/auth/google' }}><span className="google-mark">G</span>Continue with Google</button>
+            <button className="google-login" type="button" onClick={() => { window.location.href = '/api/auth/google' }}><img className="google-mark" src="/google-g.svg" alt="" />Continue with Google</button>
             <div className="login-divider"><span>or</span></div>
             <label className="login-label" htmlFor="login-email">Email address</label>
             <input className="login-input" id="login-email" type="email" placeholder="you@example.com" />

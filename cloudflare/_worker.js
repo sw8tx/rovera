@@ -48,7 +48,12 @@ async function readSession(request, secret) {
 }
 
 function redirect(location, headers = {}) {
-  return new Response(null, { status: 302, headers: { Location: location, ...headers } })
+  const responseHeaders = new Headers({ Location: location })
+  for (const [name, value] of Object.entries(headers)) {
+    if (Array.isArray(value)) value.forEach((item) => responseHeaders.append(name, item))
+    else responseHeaders.set(name, value)
+  }
+  return new Response(null, { status: 302, headers: responseHeaders })
 }
 
 async function handleAuth(request, env, url) {

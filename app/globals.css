@@ -683,6 +683,10 @@ body {
 .marketplace-page > .marketplace-footer .footer-brand, .marketplace-page > .marketplace-footer .footer-column strong { color: #fff; }
 .marketplace-page > .marketplace-footer .footer-about p, .marketplace-page > .marketplace-footer .footer-column a, .marketplace-page > .marketplace-footer .footer-bottom { color: #c6c6c6; }
 .marketplace-page > .marketplace-footer .footer-bottom { border-top-color: #444; }
+.footer-bottom { align-items: center; gap: 18px; }
+.footer-badge { display: inline-flex; align-items: center; }
+.dmca-badge { display: inline-flex; align-items: center; }
+.dmca-badge img { display: block; width: 120px; height: auto; }
 .login-button { border: 1px solid #bdbdbd; border-radius: 8px; padding: 10px 18px; background: #e2e2e2; color: #222; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; transition: background .2s, border-color .2s; }
 .login-button:hover { border-color: #8f8f8f; background: #d3d3d3; }
 .login-overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 20px; background: rgba(15,15,15,.42); }

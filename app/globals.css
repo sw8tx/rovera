@@ -683,6 +683,13 @@ body {
 .marketplace-page > .marketplace-footer .footer-brand, .marketplace-page > .marketplace-footer .footer-column strong { color: #fff; }
 .marketplace-page > .marketplace-footer .footer-about p, .marketplace-page > .marketplace-footer .footer-column a, .marketplace-page > .marketplace-footer .footer-bottom { color: #c6c6c6; }
 .marketplace-page > .marketplace-footer .footer-bottom { border-top-color: #444; }
+.footer-bottom { align-items: center; gap: 18px; flex-wrap: wrap; }
+.footer-meta { display: inline-flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.footer-icons { position: relative; display: inline-flex; width: 112px; height: 22px; align-items: center; justify-content: center; overflow: hidden; }
+.footer-icon { position: absolute; width: 18px; height: 18px; object-fit: contain; opacity: 0; filter: grayscale(1) brightness(1.8); animation: footer-icon-cycle 27s linear infinite; }
+.footer-icon:nth-child(1) { animation-delay: 0s; }.footer-icon:nth-child(2) { animation-delay: -3s; }.footer-icon:nth-child(3) { animation-delay: -6s; }.footer-icon:nth-child(4) { animation-delay: -9s; }.footer-icon:nth-child(5) { animation-delay: -12s; }.footer-icon:nth-child(6) { animation-delay: -15s; }.footer-icon:nth-child(7) { animation-delay: -18s; }.footer-icon:nth-child(8) { animation-delay: -21s; }.footer-icon:nth-child(9) { animation-delay: -24s; }
+@keyframes footer-icon-cycle { 0% { opacity: 0; transform: translateY(8px) rotate(-30deg) scale(.55); } 5%, 12% { opacity: .9; transform: translateY(0) rotate(0deg) scale(1); } 18% { opacity: 0; transform: translateY(-8px) rotate(360deg) scale(.55); } 100% { opacity: 0; transform: translateY(-8px) rotate(360deg) scale(.55); } }
+@media (max-width: 700px) { .footer-bottom { justify-content: center; gap: 12px; } .footer-meta { justify-content: center; gap: 12px; } .footer-icons { order: 3; width: 100%; } }
 .marketplace-page > .marketplace-footer { padding-top: 190px; }
 .marketplace-page > .marketplace-footer::before { top: -170px; right: 0; bottom: auto; left: 0; width: 100%; height: 230px; border-radius: 0; background: #bdbdbd url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 220' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 0h100v64c-25 42-40-18-57 22C25 128 13 38 0 78Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat; transform: none; }
 .marketplace-page > .marketplace-footer::after { display: none; }

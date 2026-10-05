@@ -1,9 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+type SessionUser = {
+  name?: string
+  email?: string
+  picture?: string
+}
 
 export default function LoginPanel() {
   const [open, setOpen] = useState(false)
+  const [user, setUser] = useState<SessionUser | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/auth/session', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((session) => setUser(session?.user ?? session ?? null))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <span className="login-loading" aria-hidden="true" />
+
+  if (user) {
+    return (
+      <div className="logged-in-user">
+        {user.picture && <img src={user.picture} alt="" className="logged-in-avatar" />}
+        <span className="logged-in-name">{user.name || user.email || 'Account'}</span>
+        <button className="logout-button" type="button" onClick={() => { window.location.href = '/api/auth/logout' }}>Log out</button>
+      </div>
+    )
+  }
 
   return (
     <>

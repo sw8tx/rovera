@@ -27,7 +27,7 @@ export default function LoginPanel() {
     return (
       <div className="logged-in-user">
         {user.picture && <img src={user.picture} alt="" className="logged-in-avatar" />}
-        <span className="logged-in-name">{user.name || user.email || 'Account'}</span>
+        <a className="logged-in-name" href="/profile">{user.name || user.email || 'Account'}</a>
         <button className="logout-button" type="button" onClick={() => { window.location.href = '/api/auth/logout' }}>Log out</button>
       </div>
     )

@@ -12,6 +12,11 @@ export default function LoginPanel() {
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<SessionUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [email, setEmail] = useState('')
+  const [code, setCode] = useState('')
+  const [emailSent, setEmailSent] = useState(false)
+  const [emailBusy, setEmailBusy] = useState(false)
+  const [emailError, setEmailError] = useState('')
 
   useEffect(() => {
     fetch('/api/auth/session', { credentials: 'same-origin' })
@@ -20,6 +25,33 @@ export default function LoginPanel() {
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [])
+
+  async function requestEmailCode() {
+    setEmailBusy(true)
+    setEmailError('')
+    try {
+      const response = await fetch('/api/auth/email/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'The email could not be sent.')
+      setEmailSent(true)
+    } catch (error) {
+      setEmailError(error instanceof Error ? error.message : 'The email could not be sent.')
+    } finally { setEmailBusy(false) }
+  }
+
+  async function verifyEmailCode() {
+    setEmailBusy(true)
+    setEmailError('')
+    try {
+      const response = await fetch('/api/auth/email/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'The code could not be verified.')
+      window.location.reload()
+    } catch (error) {
+      setEmailError(error instanceof Error ? error.message : 'The code could not be verified.')
+      setEmailBusy(false)
+    }
+  }
 
   if (loading) return <span className="login-loading" aria-hidden="true" />
 
@@ -50,10 +82,18 @@ export default function LoginPanel() {
             <p className="login-copy">Sign in to manage your orders, saved items, and account details.</p>
             <button className="google-login" type="button" onClick={() => { window.location.href = '/api/auth/google' }}><img className="google-mark" src="/google-g.svg" alt="" />Continue with Google</button>
             <div className="login-divider"><span>or</span></div>
-            <label className="login-label" htmlFor="login-email">Email address</label>
-            <input className="login-input" id="login-email" type="email" placeholder="you@example.com" />
-            <button className="email-login" type="button">Continue with email</button>
-            <p className="login-note">No password needed. We&apos;ll send you a secure sign-in link.</p>
+            {!emailSent ? <>
+              <label className="login-label" htmlFor="login-email">Email address</label>
+              <input className="login-input" id="login-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" />
+              <button className="email-login" type="button" onClick={requestEmailCode} disabled={emailBusy || !email}>{emailBusy ? 'Sending…' : 'Continue with email'}</button>
+              <p className="login-note">We&apos;ll send a one-time code from help@rovera.xyz.</p>
+            </> : <>
+              <label className="login-label" htmlFor="login-code">Enter your code</label>
+              <input className="login-input login-code-input" id="login-code" type="text" value={code} onChange={(event) => setCode(event.target.value.toUpperCase())} placeholder="RO-4028" maxLength={7} autoComplete="one-time-code" />
+              <button className="email-login" type="button" onClick={verifyEmailCode} disabled={emailBusy || !code}>{emailBusy ? 'Checking…' : 'Verify code'}</button>
+              <p className="login-note">The code is valid for 8 minutes. Sent to {email}.</p>
+            </>}
+            {emailError && <p className="login-error" role="alert">{emailError}</p>}
           </section>
         </div>
       )}

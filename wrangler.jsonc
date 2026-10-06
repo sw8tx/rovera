@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rovera1",
+  "pages_build_output_dir": "out",
+  "compatibility_date": "2026-10-06",
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["help@rovera.xyz"]
+    }
+  ]
+}

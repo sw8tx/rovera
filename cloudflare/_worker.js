@@ -29,6 +29,41 @@ async function sign(value, secret) {
   return b64(new Uint8Array(await crypto.subtle.sign('HMAC', key, enc.encode(value))))
 }
 
+async function hash(value) {
+  return b64(new Uint8Array(await crypto.subtle.digest('SHA-256', enc.encode(value))))
+}
+
+function json(requestBody, status = 200, headers = {}) {
+  const responseHeaders = new Headers({ 'Content-Type': 'application/json' })
+  for (const [name, value] of Object.entries(headers)) {
+    if (Array.isArray(value)) value.forEach((item) => responseHeaders.append(name, item))
+    else responseHeaders.set(name, value)
+  }
+  return new Response(JSON.stringify(requestBody), { status, headers: responseHeaders })
+}
+
+async function readBody(request) {
+  try { return await request.json() } catch { return {} }
+}
+
+async function makeEmailChallenge(email, secret) {
+  const digits = String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0')
+  const code = 'RO-' + digits
+  const payload = b64(JSON.stringify({ email, code: await hash(code), exp: Date.now() + 480000 }))
+  return { code, cookie: payload + '.' + await sign(payload, secret) }
+}
+
+async function readEmailChallenge(request, secret) {
+  const value = getCookies(request).rovera_email_challenge
+  if (!value || !value.includes('.')) return null
+  const parts = value.split('.')
+  if (parts[1] !== await sign(parts[0], secret)) return null
+  try {
+    const data = JSON.parse(new TextDecoder().decode(unb64(parts[0])))
+    return data.exp > Date.now() ? data : null
+  } catch { return null }
+}
+
 async function makeSession(user, secret) {
   const payload = b64(JSON.stringify({ ...user, exp: Date.now() + 604800000 }))
   return payload + '.' + await sign(payload, secret)
@@ -85,6 +120,35 @@ async function handleAuth(request, env, url) {
 
   if (url.pathname === '/api/auth/session') return Response.json(await readSession(request, env.AUTH_SECRET))
   if (url.pathname === '/api/auth/logout') return redirect('/', { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
+  if (url.pathname === '/api/auth/email/request' && request.method === 'POST') {
+    if (!env.EMAIL) return json({ error: 'Email service is not configured' }, 503)
+    const body = await readBody(request)
+    const email = String(body.email || '').trim().toLowerCase()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'Enter a valid email address.' }, 400)
+    const challenge = await makeEmailChallenge(email, env.AUTH_SECRET)
+    try {
+      await env.EMAIL.send({
+        to: email,
+        from: { email: 'help@rovera.xyz', name: 'Rovera' },
+        subject: 'Your Rovera login code',
+        text: `Your Rovera login code is ${challenge.code}. It expires in 8 minutes.`,
+        html: `<div style="font-family:Arial,sans-serif;color:#171717;max-width:520px"><p style="font-size:11px;letter-spacing:.12em;color:#777;font-weight:700">ROVERA ACCOUNT</p><h1 style="font-size:28px;margin:0 0 16px">Your login code</h1><p>Use this code to finish signing in to Rovera:</p><p style="font-size:30px;letter-spacing:.12em;font-weight:700;margin:24px 0">${challenge.code}</p><p style="color:#777">This code expires in 8 minutes. If you did not request it, you can ignore this email.</p></div>`,
+      })
+    } catch (error) {
+      console.error('Email send failed', error)
+      return json({ error: 'The login email could not be sent.' }, 502)
+    }
+    return json({ ok: true }, 200, { 'Set-Cookie': makeCookie('rovera_email_challenge', challenge.cookie, 480) })
+  }
+  if (url.pathname === '/api/auth/email/verify' && request.method === 'POST') {
+    const challenge = await readEmailChallenge(request, env.AUTH_SECRET)
+    if (!challenge) return json({ error: 'This code has expired. Request a new one.' }, 410)
+    const body = await readBody(request)
+    const code = String(body.code || '').trim().toUpperCase()
+    if (await hash(code) !== challenge.code) return json({ error: 'That code is not correct.' }, 401)
+    const session = await makeSession({ sub: 'email:' + challenge.email, email: challenge.email, name: challenge.email, picture: '' }, env.AUTH_SECRET)
+    return json({ ok: true }, 200, { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_email_challenge', '', 0)] })
+  }
   return null
 }
 

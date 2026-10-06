@@ -750,6 +750,9 @@ body {
 .login-input:focus { border-color: #777; box-shadow: 0 0 0 3px rgba(120,120,120,.13); }
 .email-login { margin-top: 12px; border: 1px solid #222; background: #222; color: #fff; }
 .email-login:hover { background: #444; }
+.email-login:disabled{cursor:not-allowed;opacity:.5}
+.login-code-input{text-align:center;letter-spacing:.14em;font-weight:700}
+.login-error{margin:12px 0 0;color:#a32828;font-size:12px;text-align:center}
 .login-note { margin: 14px 0 0; color: #888; font-size: 11px; line-height: 1.45; text-align: center; }
 @media (max-width: 520px) { .login-button { padding: 9px 12px; }.login-modal { padding: 26px 20px 22px; } }
 .login-loading{display:block;width:72px;height:34px;border-radius:8px;background:#ededed;animation:login-loading-pulse 1.2s ease-in-out infinite}

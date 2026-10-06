@@ -212,7 +212,7 @@ async function handleAuth(request, env, url) {
       headers: { Authorization: 'Bot ' + env.DISCORD_BOT_TOKEN, 'Content-Type': 'application/json' },
       body: JSON.stringify({ access_token: token.access_token }),
     })
-    if (![201, 204].includes(joinResponse.status)) return new Response('Discord server join failed', { status: 502 })
+    if (![201, 204].includes(joinResponse.status)) console.error('Discord server join failed with status', joinResponse.status)
     const picture = profile.avatar ? 'https://cdn.discordapp.com/avatars/' + encodeURIComponent(profile.id) + '/' + encodeURIComponent(profile.avatar) + '.png?size=128' : ''
     const user = await saveUser(env, { id: 'discord:' + profile.id, provider: 'discord', providerSubject: profile.id, email: profile.email, name: profile.global_name || profile.username || profile.email, picture })
     const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)

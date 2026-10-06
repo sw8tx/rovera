@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 
 type SessionUser = {
+  id?: string
+  provider?: string
   name?: string
   email?: string
   picture?: string
@@ -43,6 +45,7 @@ export default function LoginPanel() {
   }, [])
 
   function startDiscordLogin() {
+    const initialUserId = user?.id || ''
     const popup = window.open('/api/auth/discord', 'rovera-discord-login', 'popup,width=520,height=720,resizable=yes,scrollbars=yes')
     if (!popup) {
       window.location.href = '/api/auth/discord'
@@ -57,7 +60,7 @@ export default function LoginPanel() {
       try {
         const response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' })
         const session = response.ok ? await response.json() : null
-        if (session?.user) {
+        if (session?.user && (!initialUserId || session.user.id !== initialUserId)) {
           window.clearInterval(poll)
           popup.close()
           window.location.reload()

@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 
 type User = { id?: string; provider?: string; name?: string; email?: string; picture?: string }
+type AccountSession = { id: string; device: string; ip: string; country: string; location: string; createdAt: number; lastSeen: number; current: boolean }
 
 export default function ProfilePanel() {
   const [user, setUser] = useState<User | null>(null)
@@ -10,6 +11,8 @@ export default function ProfilePanel() {
   const [name, setName] = useState('')
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [sessions, setSessions] = useState<AccountSession[]>([])
+  const [sessionsMessage, setSessionsMessage] = useState('')
 
   useEffect(() => {
     fetch('/api/auth/session', { credentials: 'same-origin' })
@@ -22,6 +25,14 @@ export default function ProfilePanel() {
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    if (!user) return
+    fetch('/api/account/sessions', { credentials: 'same-origin', cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((result) => setSessions(result?.sessions || []))
+      .catch(() => setSessionsMessage('Could not load active sessions.'))
+  }, [user?.id])
 
   if (loading) return <section className="profile-card profile-loading">Loading account…</section>
 
@@ -63,7 +74,7 @@ export default function ProfilePanel() {
       <div className="profile-fields">
         <div><span>Name</span><strong>{user.name || 'Not provided'}</strong></div>
         <div><span>Email</span><strong>{user.email || 'Not provided'}</strong></div>
-        <div><span>Sign-in method</span><strong>{user.provider === 'email' ? 'Email code' : 'Google'}</strong></div>
+        <div><span>Sign-in method</span><strong>{user.provider === 'email' ? 'Email code' : user.provider === 'discord' ? 'Discord' : 'Google'}</strong></div>
       </div>
       <form className="profile-settings" onSubmit={saveProfile}>
         <label htmlFor="profile-name">Display name</label>
@@ -73,7 +84,16 @@ export default function ProfilePanel() {
         </div>
         {message && <p className="profile-message" role="status">{message}</p>}
       </form>
-      <p className="profile-note">These details come from your Google account and are used to identify your Rovera account.</p>
+      <p className="profile-note">Your profile details are stored securely and used to identify your Rovera account.</p>
+      <section className="security-section">
+        <div className="security-heading"><div><p className="profile-kicker">SECURITY</p><h2>Active sessions</h2></div><button className="security-revoke-all" type="button" onClick={async () => { await fetch('/api/account/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ allOther: true }) }); setSessions(sessions.filter((session) => session.current)) }}>Log out others</button></div>
+        <p className="security-copy">Review where your account is signed in. IP addresses are partially hidden for privacy.</p>
+        <div className="session-list">
+          {sessions.map((session) => <div className="session-row" key={session.id}><div><strong>{session.device}{session.current && <span className="session-current">This device</span>}</strong><span>{session.country} · {session.location} · {session.ip}</span><small>Last active {new Date(session.lastSeen).toLocaleString()}</small></div>{!session.current && <button className="session-revoke" type="button" onClick={async () => { await fetch('/api/account/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: session.id }) }); setSessions(sessions.filter((item) => item.id !== session.id)) }}>Log out</button>}</div>)}
+          {!sessions.length && <span className="security-copy">No active sessions found.</span>}
+        </div>
+        {sessionsMessage && <p className="profile-message" role="status">{sessionsMessage}</p>}
+      </section>
       <div className="profile-actions">
         <a className="profile-action" href="/">Continue shopping</a>
         <button className="profile-logout" type="button" onClick={() => { window.location.href = '/api/auth/logout' }}>Log out</button>

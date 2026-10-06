@@ -81,19 +81,27 @@ async function readEmailChallenge(request, secret) {
   } catch { return null }
 }
 
-async function makeSession(user, secret) {
-  const payload = b64(JSON.stringify({ ...user, exp: Date.now() + 604800000 }))
+async function makeSession(env, user, request, secret) {
+  const now = Date.now()
+  const sid = b64(crypto.getRandomValues(new Uint8Array(24)))
+  const expiresAt = now + 604800000
+  await env.ROVERA_DB.prepare('INSERT INTO auth_sessions (id, user_id, ip_address, country, colo, user_agent, created_at, last_seen, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').bind(sid, user.uid, getClientAddress(request), request.headers.get('CF-IPCountry') || '', request.headers.get('CF-Ray')?.split('-')[1] || '', (request.headers.get('User-Agent') || '').slice(0, 240), now, now, expiresAt).run()
+  const payload = b64(JSON.stringify({ ...user, sid, exp: expiresAt }))
   return payload + '.' + await sign(payload, secret)
 }
 
-async function readSession(request, secret) {
+async function readSession(request, env, secret) {
   const value = getCookies(request).rovera_session
   if (!value || !value.includes('.')) return null
   const parts = value.split('.')
   if (parts[1] !== await sign(parts[0], secret)) return null
   try {
     const data = JSON.parse(new TextDecoder().decode(unb64(parts[0])))
-    return data.exp > Date.now() ? data : null
+    if (data.exp <= Date.now() || !data.sid) return null
+    const session = await env.ROVERA_DB.prepare('SELECT id, user_id, ip_address, country, colo, user_agent, created_at, last_seen, expires_at FROM auth_sessions WHERE id = ? AND user_id = ? AND revoked_at = 0 AND expires_at > ?').bind(data.sid, data.uid, Date.now()).first()
+    if (!session) return null
+    await env.ROVERA_DB.prepare('UPDATE auth_sessions SET last_seen = ? WHERE id = ?').bind(Date.now(), data.sid).run()
+    return { ...data, record: session }
   } catch {
     return null
   }
@@ -101,6 +109,22 @@ async function readSession(request, secret) {
 
 function getClientAddress(request) {
   return request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For')?.split(',')[0].trim() || 'unknown'
+}
+
+function maskIp(ip) {
+  if (!ip) return 'Unknown'
+  if (ip.includes(':')) return ip.split(':').slice(0, 3).join(':') + ':…'
+  const parts = ip.split('.')
+  return parts.length === 4 ? parts.slice(0, 2).join('.') + '.*.*' : 'Hidden'
+}
+
+function describeUserAgent(userAgent) {
+  if (/mobile|android|iphone|ipad/i.test(userAgent)) return 'Mobile device'
+  if (/edg\//i.test(userAgent)) return 'Microsoft Edge'
+  if (/chrome\//i.test(userAgent)) return 'Google Chrome'
+  if (/firefox\//i.test(userAgent)) return 'Mozilla Firefox'
+  if (/safari\//i.test(userAgent)) return 'Safari'
+  return 'Web browser'
 }
 
 async function consumeRateLimit(db, rateKey, now = Date.now()) {
@@ -174,7 +198,7 @@ async function handleAuth(request, env, url) {
     const profile = await profileResponse.json()
     if (profile.aud !== env.GOOGLE_CLIENT_ID || profile.iss !== 'https://accounts.google.com' || profile.email_verified !== 'true') return new Response('Invalid Google identity', { status: 401 })
     const user = await saveUser(env, { id: 'google:' + profile.sub, provider: 'google', providerSubject: profile.sub, email: profile.email, name: profile.name || '', picture: profile.picture || '' })
-    const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
+    const session = await makeSession(env, { uid: user.id }, request, env.AUTH_SECRET)
     return redirect('/', { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_google_state', '', 0)] })
   }
 
@@ -215,18 +239,22 @@ async function handleAuth(request, env, url) {
     if (![201, 204].includes(joinResponse.status)) console.error('Discord server join failed with status', joinResponse.status)
     const picture = profile.avatar ? 'https://cdn.discordapp.com/avatars/' + encodeURIComponent(profile.id) + '/' + encodeURIComponent(profile.avatar) + '.png?size=128' : ''
     const user = await saveUser(env, { id: 'discord:' + profile.id, provider: 'discord', providerSubject: profile.id, email: profile.email, name: profile.global_name || profile.username || profile.email, picture })
-    const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
+    const session = await makeSession(env, { uid: user.id }, request, env.AUTH_SECRET)
     return redirect('/', { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_discord_state', '', 0)] })
   }
 
   if (url.pathname === '/api/auth/session') {
-    const session = await readSession(request, env.AUTH_SECRET)
+    const session = await readSession(request, env, env.AUTH_SECRET)
     const user = session?.uid ? await readUser(env, session.uid) : null
     return json(user ? { user } : null)
   }
-  if (url.pathname === '/api/auth/logout') return redirect('/', { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
+  if (url.pathname === '/api/auth/logout') {
+    const session = await readSession(request, env, env.AUTH_SECRET)
+    if (session?.sid) await env.ROVERA_DB.prepare('UPDATE auth_sessions SET revoked_at = ? WHERE id = ?').bind(Date.now(), session.sid).run()
+    return redirect('/', { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
+  }
   if (url.pathname === '/api/account/profile') {
-    const session = await readSession(request, env.AUTH_SECRET)
+    const session = await readSession(request, env, env.AUTH_SECRET)
     const user = session?.uid ? await readUser(env, session.uid) : null
     if (!user) return json({ error: 'You must be signed in.' }, 401)
     if (request.method === 'GET') return json({ user })
@@ -238,6 +266,22 @@ async function handleAuth(request, env, url) {
       return json({ user: { ...user, name } })
     }
     return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, PUT' })
+  }
+  if (url.pathname === '/api/account/sessions') {
+    const session = await readSession(request, env, env.AUTH_SECRET)
+    const user = session?.uid ? await readUser(env, session.uid) : null
+    if (!user) return json({ error: 'You must be signed in.' }, 401)
+    if (request.method === 'GET') {
+      const result = await env.ROVERA_DB.prepare('SELECT id, ip_address, country, colo, user_agent, created_at, last_seen, expires_at FROM auth_sessions WHERE user_id = ? AND revoked_at = 0 AND expires_at > ? ORDER BY last_seen DESC').bind(user.id, Date.now()).all()
+      return json({ sessions: (result.results || []).map((item) => ({ id: item.id, device: describeUserAgent(item.user_agent || ''), ip: maskIp(item.ip_address), country: item.country || 'Unknown', location: item.colo || 'Unknown', createdAt: item.created_at, lastSeen: item.last_seen, current: item.id === session.sid })) })
+    }
+    if (request.method === 'POST') {
+      const body = await readBody(request)
+      if (body.allOther === true) await env.ROVERA_DB.prepare('UPDATE auth_sessions SET revoked_at = ? WHERE user_id = ? AND id != ? AND revoked_at = 0').bind(Date.now(), user.id, session.sid).run()
+      else if (body.id && body.id !== session.sid) await env.ROVERA_DB.prepare('UPDATE auth_sessions SET revoked_at = ? WHERE user_id = ? AND id = ?').bind(Date.now(), user.id, String(body.id)).run()
+      return json({ ok: true })
+    }
+    return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST' })
   }
   if (url.pathname === '/api/auth/email/request' && request.method === 'POST') {
     if (!env.RESEND_API_KEY) return json({ error: 'Email provider is not configured' }, 503)
@@ -282,7 +326,7 @@ async function handleAuth(request, env, url) {
     }
     const emailId = await hash(challenge.email)
     const user = await saveUser(env, { id: 'email:' + emailId, provider: 'email', providerSubject: emailId, email: challenge.email, name: challenge.email, picture: '' })
-    const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
+    const session = await makeSession(env, { uid: user.id }, request, env.AUTH_SECRET)
     return json({ ok: true }, 200, { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_email_challenge', '', 0)] })
   }
   return null

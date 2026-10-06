@@ -273,7 +273,7 @@ async function handleAuth(request, env, url) {
     if (!user) return json({ error: 'You must be signed in.' }, 401)
     if (request.method === 'GET') {
       const result = await env.ROVERA_DB.prepare('SELECT id, ip_address, country, colo, user_agent, created_at, last_seen, expires_at FROM auth_sessions WHERE user_id = ? AND revoked_at = 0 AND expires_at > ? ORDER BY last_seen DESC').bind(user.id, Date.now()).all()
-      return json({ sessions: (result.results || []).map((item) => ({ id: item.id, device: describeUserAgent(item.user_agent || ''), ip: maskIp(item.ip_address), country: item.country || 'Unknown', location: item.colo || 'Unknown', createdAt: item.created_at, lastSeen: item.last_seen, current: item.id === session.sid })) })
+      return json({ sessions: (result.results || []).map((item) => ({ id: item.id, device: describeUserAgent(item.user_agent || ''), ip: item.ip_address || 'Unknown', country: item.country || 'Unknown', location: item.colo || 'Unknown', createdAt: item.created_at, lastSeen: item.last_seen, current: item.id === session.sid })) })
     }
     if (request.method === 'POST') {
       const body = await readBody(request)

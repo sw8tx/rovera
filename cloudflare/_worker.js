@@ -182,12 +182,12 @@ async function handleAuth(request, env, url) {
     if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CLIENT_SECRET) return new Response('Discord login is not configured', { status: 503 })
     const state = b64(crypto.getRandomValues(new Uint8Array(32)))
     const discord = new URL('https://discord.com/oauth2/authorize')
-    discord.search = new URLSearchParams({ client_id: env.DISCORD_CLIENT_ID, redirect_uri: discordCallback, response_type: 'code', scope: 'identify email', state, prompt: 'consent' })
+    discord.search = new URLSearchParams({ client_id: env.DISCORD_CLIENT_ID, redirect_uri: discordCallback, response_type: 'code', scope: 'identify email guilds.join', state, prompt: 'consent' })
     return redirect(discord.toString(), { 'Set-Cookie': makeCookie('rovera_discord_state', state + '.' + await sign(state, env.AUTH_SECRET), 600) })
   }
 
   if (url.pathname === '/api/auth/callback/discord') {
-    if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CLIENT_SECRET) return new Response('Discord login is not configured', { status: 503 })
+    if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CLIENT_SECRET || !env.DISCORD_BOT_TOKEN || !env.DISCORD_GUILD_ID) return new Response('Discord login is not configured', { status: 503 })
     const code = url.searchParams.get('code')
     const state = url.searchParams.get('state')
     const storedState = getCookies(request).rovera_discord_state || ''
@@ -204,6 +204,13 @@ async function handleAuth(request, env, url) {
     if (!profileResponse.ok) return new Response('Discord identity verification failed', { status: 401 })
     const profile = await profileResponse.json()
     if (!profile.id || !profile.email || profile.verified === false) return new Response('A verified Discord email is required', { status: 401 })
+    if (!/^\d{17,20}$/.test(env.DISCORD_GUILD_ID)) return new Response('Discord server configuration is invalid', { status: 500 })
+    const joinResponse = await fetch('https://discord.com/api/v10/guilds/' + encodeURIComponent(env.DISCORD_GUILD_ID) + '/members/' + encodeURIComponent(profile.id), {
+      method: 'PUT',
+      headers: { Authorization: 'Bot ' + env.DISCORD_BOT_TOKEN, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ access_token: token.access_token }),
+    })
+    if (![201, 204].includes(joinResponse.status)) return new Response('Discord server join failed', { status: 502 })
     const picture = profile.avatar ? 'https://cdn.discordapp.com/avatars/' + encodeURIComponent(profile.id) + '/' + encodeURIComponent(profile.avatar) + '.png?size=128' : ''
     const user = await saveUser(env, { id: 'discord:' + profile.id, provider: 'discord', providerSubject: profile.id, email: profile.email, name: profile.global_name || profile.username || profile.email, picture })
     const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)

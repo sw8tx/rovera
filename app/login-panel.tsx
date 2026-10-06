@@ -8,6 +8,16 @@ type SessionUser = {
   picture?: string
 }
 
+async function readApiResponse(response: Response) {
+  const body = await response.text()
+  if (!body) return {}
+  try {
+    return JSON.parse(body) as { error?: string }
+  } catch {
+    return { error: 'Der Login-Dienst ist gerade nicht erreichbar. Bitte lade die Seite neu und versuche es erneut.' }
+  }
+}
+
 export default function LoginPanel() {
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState<SessionUser | null>(null)
@@ -31,7 +41,7 @@ export default function LoginPanel() {
     setEmailError('')
     try {
       const response = await fetch('/api/auth/email/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
-      const result = await response.json()
+      const result = await readApiResponse(response)
       if (!response.ok) throw new Error(result.error || 'The email could not be sent.')
       setEmailSent(true)
     } catch (error) {
@@ -44,7 +54,7 @@ export default function LoginPanel() {
     setEmailError('')
     try {
       const response = await fetch('/api/auth/email/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) })
-      const result = await response.json()
+      const result = await readApiResponse(response)
       if (!response.ok) throw new Error(result.error || 'The code could not be verified.')
       window.location.reload()
     } catch (error) {

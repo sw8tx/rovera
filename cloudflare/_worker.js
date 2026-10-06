@@ -121,19 +121,24 @@ async function handleAuth(request, env, url) {
   if (url.pathname === '/api/auth/session') return Response.json(await readSession(request, env.AUTH_SECRET))
   if (url.pathname === '/api/auth/logout') return redirect('/', { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
   if (url.pathname === '/api/auth/email/request' && request.method === 'POST') {
-    if (!env.EMAIL) return json({ error: 'Email service is not configured' }, 503)
+    if (!env.RESEND_API_KEY) return json({ error: 'Email provider is not configured' }, 503)
     const body = await readBody(request)
     const email = String(body.email || '').trim().toLowerCase()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'Enter a valid email address.' }, 400)
     const challenge = await makeEmailChallenge(email, env.AUTH_SECRET)
     try {
-      await env.EMAIL.send({
-        to: email,
-        from: { email: 'help@rovera.xyz', name: 'Rovera' },
-        subject: 'Your Rovera login code',
-        text: `Your Rovera login code is ${challenge.code}. It expires in 8 minutes.`,
-        html: `<div style="font-family:Arial,sans-serif;color:#171717;max-width:520px"><p style="font-size:11px;letter-spacing:.12em;color:#777;font-weight:700">ROVERA ACCOUNT</p><h1 style="font-size:28px;margin:0 0 16px">Your login code</h1><p>Use this code to finish signing in to Rovera:</p><p style="font-size:30px;letter-spacing:.12em;font-weight:700;margin:24px 0">${challenge.code}</p><p style="color:#777">This code expires in 8 minutes. If you did not request it, you can ignore this email.</p></div>`,
+      const emailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Rovera <help@rovera.xyz>',
+          to: [email],
+          subject: 'Your Rovera login code',
+          text: `Your Rovera login code is ${challenge.code}. It expires in 8 minutes.`,
+          html: `<div style="font-family:Arial,sans-serif;color:#171717;max-width:520px"><p style="font-size:11px;letter-spacing:.12em;color:#777;font-weight:700">ROVERA ACCOUNT</p><h1 style="font-size:28px;margin:0 0 16px">Your login code</h1><p>Use this code to finish signing in to Rovera:</p><p style="font-size:30px;letter-spacing:.12em;font-weight:700;margin:24px 0">${challenge.code}</p><p style="color:#777">This code expires in 8 minutes. If you did not request it, you can ignore this email.</p></div>`,
+        }),
       })
+      if (!emailResponse.ok) throw new Error('Resend returned ' + emailResponse.status)
     } catch (error) {
       console.error('Email send failed', error)
       return json({ error: 'The login email could not be sent.' }, 502)

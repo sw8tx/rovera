@@ -33,13 +33,25 @@ async function hash(value) {
   return b64(new Uint8Array(await crypto.subtle.digest('SHA-256', enc.encode(value))))
 }
 
+function secureHeaders(headers = {}) {
+  const result = new Headers(headers)
+  result.set('X-Content-Type-Options', 'nosniff')
+  result.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  result.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  return result
+}
+
 function json(requestBody, status = 200, headers = {}) {
-  const responseHeaders = new Headers({ 'Content-Type': 'application/json' })
+  const responseHeaders = secureHeaders({ 'Content-Type': 'application/json' })
   for (const [name, value] of Object.entries(headers)) {
     if (Array.isArray(value)) value.forEach((item) => responseHeaders.append(name, item))
     else responseHeaders.set(name, value)
   }
   return new Response(JSON.stringify(requestBody), { status, headers: responseHeaders })
+}
+
+function secureResponse(response) {
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers: secureHeaders(response.headers) })
 }
 
 async function readBody(request) {
@@ -49,8 +61,13 @@ async function readBody(request) {
 async function makeEmailChallenge(email, secret) {
   const digits = String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0')
   const code = 'RO-' + digits
-  const payload = b64(JSON.stringify({ email, code: await hash(code), exp: Date.now() + 480000 }))
+  const payload = b64(JSON.stringify({ email, code: await hash(code), exp: Date.now() + 480000, attempts: 0 }))
   return { code, cookie: payload + '.' + await sign(payload, secret) }
+}
+
+async function makeChallengeCookie(challenge, secret) {
+  const payload = b64(JSON.stringify(challenge))
+  return payload + '.' + await sign(payload, secret)
 }
 
 async function readEmailChallenge(request, secret) {
@@ -82,8 +99,44 @@ async function readSession(request, secret) {
   }
 }
 
+function getClientAddress(request) {
+  return request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For')?.split(',')[0].trim() || 'unknown'
+}
+
+async function consumeRateLimit(db, rateKey, now = Date.now()) {
+  const existing = await db.prepare('SELECT window_started, request_count, blocked_until FROM auth_rate_limits WHERE rate_key = ?').bind(rateKey).first()
+  const windowMs = 15 * 60 * 1000
+  if (!existing || now - Number(existing.window_started) >= windowMs) {
+    await db.prepare('INSERT INTO auth_rate_limits (rate_key, window_started, request_count, blocked_until) VALUES (?, ?, 1, 0) ON CONFLICT(rate_key) DO UPDATE SET window_started = excluded.window_started, request_count = 1, blocked_until = 0').bind(rateKey, now).run()
+    return { ok: true, retryAfter: 0 }
+  }
+  if (Number(existing.blocked_until) > now) return { ok: false, retryAfter: Math.ceil((Number(existing.blocked_until) - now) / 1000) }
+  if (Number(existing.request_count) >= 5) {
+    const blockedUntil = now + windowMs
+    await db.prepare('UPDATE auth_rate_limits SET blocked_until = ? WHERE rate_key = ?').bind(blockedUntil, rateKey).run()
+    return { ok: false, retryAfter: Math.ceil(windowMs / 1000) }
+  }
+  await db.prepare('UPDATE auth_rate_limits SET request_count = request_count + 1 WHERE rate_key = ?').bind(rateKey).run()
+  return { ok: true, retryAfter: 0 }
+}
+
+async function saveUser(env, user) {
+  if (!env.ROVERA_DB) throw new Error('Account database is not configured')
+  const now = Date.now()
+  await env.ROVERA_DB.prepare(`INSERT INTO users (id, provider, provider_subject, email, name, picture, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(provider_subject) DO UPDATE SET email = excluded.email, name = excluded.name, picture = excluded.picture, updated_at = excluded.updated_at`)
+    .bind(user.id, user.provider, user.providerSubject, user.email, user.name || '', user.picture || '', now, now).run()
+  return user
+}
+
+async function readUser(env, id) {
+  if (!env.ROVERA_DB || !id) return null
+  return env.ROVERA_DB.prepare('SELECT id, provider, email, name, picture FROM users WHERE id = ?').bind(id).first()
+}
+
 function redirect(location, headers = {}) {
-  const responseHeaders = new Headers({ Location: location })
+  const responseHeaders = secureHeaders({ Location: location })
   for (const [name, value] of Object.entries(headers)) {
     if (Array.isArray(value)) value.forEach((item) => responseHeaders.append(name, item))
     else responseHeaders.set(name, value)
@@ -93,6 +146,7 @@ function redirect(location, headers = {}) {
 
 async function handleAuth(request, env, url) {
   if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.AUTH_SECRET) return new Response('OAuth is not configured', { status: 500 })
+  if (!env.ROVERA_DB) return json({ error: 'Account storage is not configured' }, 503)
   const callback = url.origin + '/api/auth/callback/google'
 
   if (url.pathname === '/api/auth/google') {
@@ -114,17 +168,39 @@ async function handleAuth(request, env, url) {
     if (!profileResponse.ok) return new Response('Google identity verification failed', { status: 401 })
     const profile = await profileResponse.json()
     if (profile.aud !== env.GOOGLE_CLIENT_ID || profile.iss !== 'https://accounts.google.com' || profile.email_verified !== 'true') return new Response('Invalid Google identity', { status: 401 })
-    const session = await makeSession({ sub: profile.sub, email: profile.email, name: profile.name || '', picture: profile.picture || '' }, env.AUTH_SECRET)
+    const user = await saveUser(env, { id: 'google:' + profile.sub, provider: 'google', providerSubject: profile.sub, email: profile.email, name: profile.name || '', picture: profile.picture || '' })
+    const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
     return redirect('/', { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_oauth_state', '', 0)] })
   }
 
-  if (url.pathname === '/api/auth/session') return Response.json(await readSession(request, env.AUTH_SECRET))
+  if (url.pathname === '/api/auth/session') {
+    const session = await readSession(request, env.AUTH_SECRET)
+    const user = session?.uid ? await readUser(env, session.uid) : null
+    return json(user ? { user } : null)
+  }
   if (url.pathname === '/api/auth/logout') return redirect('/', { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
+  if (url.pathname === '/api/account/profile') {
+    const session = await readSession(request, env.AUTH_SECRET)
+    const user = session?.uid ? await readUser(env, session.uid) : null
+    if (!user) return json({ error: 'You must be signed in.' }, 401)
+    if (request.method === 'GET') return json({ user })
+    if (request.method === 'PUT') {
+      const body = await readBody(request)
+      const name = String(body.name || '').trim()
+      if (name.length > 80 || /[\u0000-\u001f\u007f]/.test(name)) return json({ error: 'Enter a valid display name.' }, 400)
+      await env.ROVERA_DB.prepare('UPDATE users SET name = ?, updated_at = ? WHERE id = ?').bind(name, Date.now(), user.id).run()
+      return json({ user: { ...user, name } })
+    }
+    return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, PUT' })
+  }
   if (url.pathname === '/api/auth/email/request' && request.method === 'POST') {
     if (!env.RESEND_API_KEY) return json({ error: 'Email provider is not configured' }, 503)
     const body = await readBody(request)
     const email = String(body.email || '').trim().toLowerCase()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'Enter a valid email address.' }, 400)
+    const rateKey = await hash(email + '|' + getClientAddress(request) + '|' + env.AUTH_SECRET)
+    const rate = await consumeRateLimit(env.ROVERA_DB, rateKey)
+    if (!rate.ok) return json({ error: 'Too many code requests. Please try again later.' }, 429, { 'Retry-After': String(rate.retryAfter) })
     const challenge = await makeEmailChallenge(email, env.AUTH_SECRET)
     try {
       const emailResponse = await fetch('https://api.resend.com/emails', {
@@ -151,8 +227,16 @@ async function handleAuth(request, env, url) {
     if (!challenge) return json({ error: 'This code has expired. Request a new one.' }, 410)
     const body = await readBody(request)
     const code = String(body.code || '').trim().toUpperCase()
-    if (await hash(code) !== challenge.code) return json({ error: 'That code is not correct.' }, 401)
-    const session = await makeSession({ sub: 'email:' + challenge.email, email: challenge.email, name: challenge.email, picture: '' }, env.AUTH_SECRET)
+    if (await hash(code) !== challenge.code) {
+      const attempts = Number(challenge.attempts || 0) + 1
+      if (attempts >= 5) return json({ error: 'Too many incorrect attempts. Request a new code.' }, 429, { 'Set-Cookie': makeCookie('rovera_email_challenge', '', 0) })
+      const updatedChallenge = { ...challenge, attempts }
+      const remaining = Math.max(1, Math.ceil((Number(challenge.exp) - Date.now()) / 1000))
+      return json({ error: 'That code is not correct.' }, 401, { 'Set-Cookie': makeCookie('rovera_email_challenge', await makeChallengeCookie(updatedChallenge, env.AUTH_SECRET), remaining) })
+    }
+    const emailId = await hash(challenge.email)
+    const user = await saveUser(env, { id: 'email:' + emailId, provider: 'email', providerSubject: emailId, email: challenge.email, name: challenge.email, picture: '' })
+    const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
     return json({ ok: true }, 200, { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_email_challenge', '', 0)] })
   }
   return null
@@ -165,6 +249,6 @@ export default {
       const response = await handleAuth(request, env, url)
       if (response) return response
     }
-    return env.ASSETS.fetch(request)
+    return secureResponse(await env.ASSETS.fetch(request))
   }
 }

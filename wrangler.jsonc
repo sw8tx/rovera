@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "rovera1",
+  "pages_build_output_dir": "./out",
+  "d1_databases": [
+    {
+      "binding": "ROVERA_DB",
+      "database_name": "rovera-users",
+      "database_id": "ad32bad6-d66d-4de3-80a7-826d26f4f859"
+    }
+  ]
+}

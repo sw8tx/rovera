@@ -91,7 +91,7 @@ export default function LoginPanel() {
             <h2 id="login-title">Welcome back</h2>
             <p className="login-copy">Sign in to manage your orders, saved items, and account details.</p>
             <button className="google-login" type="button" onClick={() => { window.location.href = '/api/auth/google' }}><img className="google-mark" src="/google-g.svg" alt="" />Continue with Google</button>
-            <button className="discord-login" type="button" onClick={() => setEmailError('Discord login wird aktiviert, sobald die Discord OAuth-Schlüssel hinterlegt sind.') }><img src="/icons/discord.svg" alt="" />Login with Discord</button>
+            <button className="discord-login" type="button" onClick={() => { window.location.href = '/api/auth/discord' }}><img src="/icons/discord.svg" alt="" />Login with Discord</button>
             <div className="login-divider"><span>or</span></div>
             {!emailSent ? <>
               <label className="login-label" htmlFor="login-email">Email address</label>

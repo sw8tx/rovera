@@ -145,22 +145,27 @@ function redirect(location, headers = {}) {
 }
 
 async function handleAuth(request, env, url) {
-  if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.AUTH_SECRET) return new Response('OAuth is not configured', { status: 500 })
+  if (!env.AUTH_SECRET) return new Response('Authentication is not configured', { status: 500 })
   if (!env.ROVERA_DB) return json({ error: 'Account storage is not configured' }, 503)
-  const callback = url.origin + '/api/auth/callback/google'
+  const googleCallback = url.origin + '/api/auth/callback/google'
+  const discordCallback = url.origin + '/api/auth/callback/discord'
 
   if (url.pathname === '/api/auth/google') {
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) return new Response('Google login is not configured', { status: 503 })
     const state = b64(crypto.getRandomValues(new Uint8Array(32)))
     const google = new URL('https://accounts.google.com/o/oauth2/v2/auth')
-    google.search = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: callback, response_type: 'code', scope: 'openid email profile', state, prompt: 'select_account' })
-    return redirect(google.toString(), { 'Set-Cookie': makeCookie('rovera_oauth_state', state, 600) })
+    google.search = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: googleCallback, response_type: 'code', scope: 'openid email profile', state, prompt: 'select_account' })
+    return redirect(google.toString(), { 'Set-Cookie': makeCookie('rovera_google_state', state + '.' + await sign(state, env.AUTH_SECRET), 600) })
   }
 
   if (url.pathname === '/api/auth/callback/google') {
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) return new Response('Google login is not configured', { status: 503 })
     const code = url.searchParams.get('code')
     const state = url.searchParams.get('state')
-    if (!code || !state || state !== getCookies(request).rovera_oauth_state) return new Response('Invalid OAuth state', { status: 400 })
-    const body = new URLSearchParams({ code, client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, redirect_uri: callback, grant_type: 'authorization_code' })
+    const storedState = getCookies(request).rovera_google_state || ''
+    const stateParts = storedState.split('.')
+    if (!code || !state || stateParts.length !== 2 || state !== stateParts[0] || stateParts[1] !== await sign(state, env.AUTH_SECRET)) return new Response('Invalid OAuth state', { status: 400 })
+    const body = new URLSearchParams({ code, client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, redirect_uri: googleCallback, grant_type: 'authorization_code' })
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body })
     if (!tokenResponse.ok) return new Response('Google token exchange failed', { status: 502 })
     const token = await tokenResponse.json()
@@ -170,7 +175,39 @@ async function handleAuth(request, env, url) {
     if (profile.aud !== env.GOOGLE_CLIENT_ID || profile.iss !== 'https://accounts.google.com' || profile.email_verified !== 'true') return new Response('Invalid Google identity', { status: 401 })
     const user = await saveUser(env, { id: 'google:' + profile.sub, provider: 'google', providerSubject: profile.sub, email: profile.email, name: profile.name || '', picture: profile.picture || '' })
     const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
-    return redirect('/', { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_oauth_state', '', 0)] })
+    return redirect('/', { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_google_state', '', 0)] })
+  }
+
+  if (url.pathname === '/api/auth/discord') {
+    if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CLIENT_SECRET) return new Response('Discord login is not configured', { status: 503 })
+    const state = b64(crypto.getRandomValues(new Uint8Array(32)))
+    const discord = new URL('https://discord.com/oauth2/authorize')
+    discord.search = new URLSearchParams({ client_id: env.DISCORD_CLIENT_ID, redirect_uri: discordCallback, response_type: 'code', scope: 'identify email', state, prompt: 'consent' })
+    return redirect(discord.toString(), { 'Set-Cookie': makeCookie('rovera_discord_state', state + '.' + await sign(state, env.AUTH_SECRET), 600) })
+  }
+
+  if (url.pathname === '/api/auth/callback/discord') {
+    if (!env.DISCORD_CLIENT_ID || !env.DISCORD_CLIENT_SECRET) return new Response('Discord login is not configured', { status: 503 })
+    const code = url.searchParams.get('code')
+    const state = url.searchParams.get('state')
+    const storedState = getCookies(request).rovera_discord_state || ''
+    const stateParts = storedState.split('.')
+    if (!code || !state || stateParts.length !== 2 || state !== stateParts[0] || stateParts[1] !== await sign(state, env.AUTH_SECRET)) return new Response('Invalid OAuth state', { status: 400 })
+    const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ client_id: env.DISCORD_CLIENT_ID, client_secret: env.DISCORD_CLIENT_SECRET, grant_type: 'authorization_code', code, redirect_uri: discordCallback }),
+    })
+    if (!tokenResponse.ok) return new Response('Discord token exchange failed', { status: 502 })
+    const token = await tokenResponse.json()
+    const profileResponse = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: 'Bearer ' + token.access_token } })
+    if (!profileResponse.ok) return new Response('Discord identity verification failed', { status: 401 })
+    const profile = await profileResponse.json()
+    if (!profile.id || !profile.email || profile.verified === false) return new Response('A verified Discord email is required', { status: 401 })
+    const picture = profile.avatar ? 'https://cdn.discordapp.com/avatars/' + encodeURIComponent(profile.id) + '/' + encodeURIComponent(profile.avatar) + '.png?size=128' : ''
+    const user = await saveUser(env, { id: 'discord:' + profile.id, provider: 'discord', providerSubject: profile.id, email: profile.email, name: profile.global_name || profile.username || profile.email, picture })
+    const session = await makeSession({ uid: user.id }, env.AUTH_SECRET)
+    return redirect('/', { 'Set-Cookie': [makeCookie('rovera_session', session, 604800), makeCookie('rovera_discord_state', '', 0)] })
   }
 
   if (url.pathname === '/api/auth/session') {

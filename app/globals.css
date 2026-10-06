@@ -742,7 +742,7 @@ body {
 .google-login, .email-login { display: flex; width: 100%; min-height: 44px; align-items: center; justify-content: center; gap: 10px; border-radius: 7px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
 .google-login { border: 1px solid #cfcfcf; background: #ededed; color: #222; }
 .google-login:hover { background: #e4e4e4; }
-.discord-login { display:flex; width:100%; min-height:44px; align-items:center; justify-content:center; gap:10px; margin-top:10px; border:0; border-radius:7px; background:linear-gradient(135deg,#5865f2,#7c3aed); color:#fff; cursor:pointer; font:inherit; font-size:13px; font-weight:700; box-shadow:0 8px 18px rgba(88,101,242,.2); transition:transform .2s,box-shadow .2s,filter .2s; }.discord-login:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(88,101,242,.28);filter:brightness(1.04)}.discord-login img{width:18px;height:18px;filter:brightness(0) invert(1)}
+.discord-login { display:flex; width:100%; min-height:44px; align-items:center; justify-content:center; gap:10px; margin-top:10px; border:0; border-radius:7px; background:#7c3aed; color:#fff; cursor:pointer; font:inherit; font-size:13px; font-weight:700; box-shadow:0 8px 18px rgba(124,58,237,.2); transition:background-color .2s,transform .2s,box-shadow .2s; }.discord-login:hover{background:#6d28d9;transform:translateY(-1px);box-shadow:0 10px 22px rgba(124,58,237,.28)}.discord-login img{width:18px;height:18px;filter:brightness(0) invert(1)}
 .google-mark { display: block; width: 19px; height: 19px; object-fit: contain; }
 .login-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #999; font-size: 12px; }
 .login-divider::before, .login-divider::after { height: 1px; flex: 1; background: #dedede; content: ""; }

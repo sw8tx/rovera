@@ -29,12 +29,42 @@ export default function LoginPanel() {
   const [emailError, setEmailError] = useState('')
 
   useEffect(() => {
+    const authError = new URLSearchParams(window.location.search).get('authError')
+    if (authError === 'discord_denied' || authError === 'discord_failed') {
+      setOpen(true)
+      setEmailError(authError === 'discord_denied' ? 'Discord-Anmeldung abgebrochen.' : 'Discord-Anmeldung konnte nicht abgeschlossen werden.')
+      window.history.replaceState({}, '', window.location.pathname)
+    }
     fetch('/api/auth/session', { credentials: 'same-origin' })
       .then((response) => response.ok ? response.json() : null)
       .then((session) => setUser(session?.user ?? session ?? null))
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [])
+
+  function startDiscordLogin() {
+    const popup = window.open('/api/auth/discord', 'rovera-discord-login', 'popup,width=520,height=720,resizable=yes,scrollbars=yes')
+    if (!popup) {
+      window.location.href = '/api/auth/discord'
+      return
+    }
+    const startedAt = Date.now()
+    const poll = window.setInterval(async () => {
+      if (Date.now() - startedAt > 120000 || popup.closed) {
+        window.clearInterval(poll)
+        return
+      }
+      try {
+        const response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' })
+        const session = response.ok ? await response.json() : null
+        if (session?.user) {
+          window.clearInterval(poll)
+          popup.close()
+          window.location.reload()
+        }
+      } catch {}
+    }, 700)
+  }
 
   async function requestEmailCode() {
     setEmailBusy(true)
@@ -91,7 +121,7 @@ export default function LoginPanel() {
             <h2 id="login-title">Welcome back</h2>
             <p className="login-copy">Sign in to manage your orders, saved items, and account details.</p>
             <button className="google-login" type="button" onClick={() => { window.location.href = '/api/auth/google' }}><img className="google-mark" src="/google-g.svg" alt="" />Continue with Google</button>
-            <button className="discord-login" type="button" onClick={() => { window.location.href = '/api/auth/discord' }}><img src="/icons/discord.svg" alt="" />Login with Discord</button>
+            <button className="discord-login" type="button" onClick={startDiscordLogin}><img src="/icons/discord.svg" alt="" />Login with Discord</button>
             <div className="login-divider"><span>or</span></div>
             {!emailSent ? <>
               <label className="login-label" htmlFor="login-email">Email address</label>

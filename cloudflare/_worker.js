@@ -192,7 +192,9 @@ async function handleAuth(request, env, url) {
     const state = url.searchParams.get('state')
     const storedState = getCookies(request).rovera_discord_state || ''
     const stateParts = storedState.split('.')
-    if (!code || !state || stateParts.length !== 2 || state !== stateParts[0] || stateParts[1] !== await sign(state, env.AUTH_SECRET)) return new Response('Invalid OAuth state', { status: 400 })
+    if (!state || stateParts.length !== 2 || state !== stateParts[0] || stateParts[1] !== await sign(state, env.AUTH_SECRET)) return new Response('Invalid OAuth state', { status: 400 })
+    if (url.searchParams.get('error') === 'access_denied') return redirect('/?authError=discord_denied', { 'Set-Cookie': makeCookie('rovera_discord_state', '', 0) })
+    if (!code) return redirect('/?authError=discord_failed', { 'Set-Cookie': makeCookie('rovera_discord_state', '', 0) })
     const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

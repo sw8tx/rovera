@@ -133,9 +133,10 @@ async function handleAuth(request, env, url) {
         body: JSON.stringify({
           from: 'Rovera <help@rovera.xyz>',
           to: [email],
-          subject: 'Your Rovera login code',
-          text: `Your Rovera login code is ${challenge.code}. It expires in 8 minutes.`,
-          html: `<div style="font-family:Arial,sans-serif;color:#171717;max-width:520px"><p style="font-size:11px;letter-spacing:.12em;color:#777;font-weight:700">ROVERA ACCOUNT</p><h1 style="font-size:28px;margin:0 0 16px">Your login code</h1><p>Use this code to finish signing in to Rovera:</p><p style="font-size:30px;letter-spacing:.12em;font-weight:700;margin:24px 0">${challenge.code}</p><p style="color:#777">This code expires in 8 minutes. If you did not request it, you can ignore this email.</p></div>`,
+          reply_to: ['help@rovera.xyz'],
+          subject: `${challenge.code} is your Rovera sign-in code`,
+          text: `Rovera sign-in\n\nYour one-time sign-in code is: ${challenge.code}\n\nThis code expires in 8 minutes. If you did not request this code, you can ignore this email.\n\nRovera\nhttps://rovera.xyz/`,
+          html: `<div style="margin:0;background:#f5f5f3;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#171717"><div style="display:none;max-height:0;overflow:hidden;opacity:0">Your one-time Rovera sign-in code is ${challenge.code}.</div><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e4e4e1;border-radius:14px"><tr><td style="padding:28px 30px"><img src="https://rovera.xyz/rovera-logo.png" width="44" height="44" alt="Rovera" style="display:block;border:0;border-radius:10px;margin-bottom:22px"><p style="margin:0 0 8px;font-size:11px;letter-spacing:.14em;color:#777;font-weight:700">ROVERA ACCOUNT</p><h1 style="margin:0 0 14px;font-size:26px;line-height:1.2;font-weight:700">Sign in to Rovera</h1><p style="margin:0;color:#555;line-height:1.6">Use the one-time code below to finish signing in.</p><div style="margin:24px 0;padding:16px;text-align:center;background:#f2f2f0;border-radius:10px"><span style="font-size:28px;letter-spacing:.16em;font-weight:700;color:#171717">${challenge.code}</span></div><p style="margin:0;color:#777;font-size:13px;line-height:1.6">This code expires in 8 minutes. If you did not request it, you can safely ignore this email.</p><p style="margin:24px 0 0;color:#999;font-size:12px">Rovera · <a href="https://rovera.xyz/" style="color:#777">rovera.xyz</a></p></td></tr></table></div>`,
         }),
       })
       if (!emailResponse.ok) throw new Error('Resend returned ' + emailResponse.status)

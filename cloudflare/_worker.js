@@ -245,7 +245,7 @@ async function handleAuth(request, env, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url)
-    if (url.pathname.startsWith('/api/auth/')) {
+    if (url.pathname.startsWith('/api/auth/') || url.pathname.startsWith('/api/account/')) {
       const response = await handleAuth(request, env, url)
       if (response) return response
     }

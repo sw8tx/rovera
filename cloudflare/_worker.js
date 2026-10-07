@@ -171,8 +171,9 @@ function redirect(location, headers = {}) {
 async function handleAuth(request, env, url) {
   if (!env.AUTH_SECRET) return new Response('Authentication is not configured', { status: 500 })
   if (!env.ROVERA_DB) return json({ error: 'Account storage is not configured' }, 503)
-  const googleCallback = url.origin + '/api/auth/callback/google'
-  const discordCallback = url.origin + '/api/auth/callback/discord'
+  const appOrigin = 'https://rovera.xyz'
+  const googleCallback = appOrigin + '/api/auth/callback/google'
+  const discordCallback = appOrigin + '/api/auth/callback/discord'
 
   if (url.pathname === '/api/auth/google') {
     if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) return new Response('Google login is not configured', { status: 503 })

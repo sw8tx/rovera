@@ -151,12 +151,13 @@ async function saveUser(env, user) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(provider_subject) DO UPDATE SET email = excluded.email, name = excluded.name, picture = excluded.picture, updated_at = excluded.updated_at`)
     .bind(user.id, user.provider, user.providerSubject, user.email, user.name || '', user.picture || '', now, now).run()
-  return user
+  const saved = await env.ROVERA_DB.prepare('SELECT id, provider, email, name, picture, account_status FROM users WHERE provider_subject = ?').bind(user.providerSubject).first()
+  return saved || user
 }
 
 async function readUser(env, id) {
   if (!env.ROVERA_DB || !id) return null
-  return env.ROVERA_DB.prepare('SELECT id, provider, email, name, picture FROM users WHERE id = ?').bind(id).first()
+  return env.ROVERA_DB.prepare("SELECT id, provider, email, name, picture, account_status FROM users WHERE id = ? AND account_status = 'active'").bind(id).first()
 }
 
 function redirect(location, headers = {}) {
@@ -283,6 +284,22 @@ async function handleAuth(request, env, url) {
       return json({ ok: true })
     }
     return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST' })
+  }
+  if (url.pathname === '/api/account/deactivate' && request.method === 'POST') {
+    const session = await readSession(request, env, env.AUTH_SECRET)
+    const user = session?.uid ? await readUser(env, session.uid) : null
+    if (!user) return json({ error: 'You must be signed in.' }, 401)
+    await env.ROVERA_DB.prepare("UPDATE users SET account_status = 'deactivated', updated_at = ? WHERE id = ?").bind(Date.now(), user.id).run()
+    await env.ROVERA_DB.prepare('UPDATE auth_sessions SET revoked_at = ? WHERE user_id = ?').bind(Date.now(), user.id).run()
+    return json({ ok: true }, 200, { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
+  }
+  if (url.pathname === '/api/account/delete' && request.method === 'POST') {
+    const session = await readSession(request, env, env.AUTH_SECRET)
+    const user = session?.uid ? await readUser(env, session.uid) : null
+    if (!user) return json({ error: 'You must be signed in.' }, 401)
+    await env.ROVERA_DB.prepare('DELETE FROM auth_sessions WHERE user_id = ?').bind(user.id).run()
+    await env.ROVERA_DB.prepare('DELETE FROM users WHERE id = ?').bind(user.id).run()
+    return json({ ok: true }, 200, { 'Set-Cookie': makeCookie('rovera_session', '', 0) })
   }
   if (url.pathname === '/api/auth/email/request' && request.method === 'POST') {
     if (!env.RESEND_API_KEY) return json({ error: 'Email provider is not configured' }, 503)

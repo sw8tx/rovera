@@ -62,13 +62,26 @@ export default function ProfilePanel() {
     setSessions(sessions.filter((session) => session.id !== id))
   }
 
+  async function deactivateAccount() {
+    if (!window.confirm('Deactivate your account? You will be signed out and can no longer use it until it is restored.')) return
+    const response = await fetch('/api/account/deactivate', { method: 'POST', credentials: 'same-origin' })
+    if (response.ok) window.location.href = '/'
+  }
+
+  async function deleteAccount() {
+    if (!window.confirm('Delete your account permanently? This cannot be undone.')) return
+    if (!window.confirm('Please confirm again: permanently delete this Rovera account?')) return
+    const response = await fetch('/api/account/delete', { method: 'POST', credentials: 'same-origin' })
+    if (response.ok) window.location.href = '/'
+  }
+
   const providerName = user.provider === 'email' ? 'Email code' : user.provider === 'discord' ? 'Discord' : 'Google'
   const currentSessions = sessions.filter((session) => session.current)
   const otherSessions = sessions.filter((session) => !session.current)
 
   return (
     <section className="profile-card profile-compact">
-      <div className="compact-heading"><div className="account-square">{user.picture ? <img src={user.picture} alt="" /> : (user.name || user.email || 'R').slice(0, 1).toUpperCase()}</div><div><p className="profile-kicker">ROVERA ACCOUNT</p><h1>Account settings</h1></div></div>
+      <div className="compact-heading"><div className="account-square">{user.picture ? <img src={user.picture} alt="" /> : (user.name || user.email || 'R').slice(0, 1).toUpperCase()}</div><div><p className="profile-kicker">ROVERA ACCOUNT</p><h1>Account settings</h1></div><div className="account-sidebar"><p>ACCOUNT</p><button type="button" onClick={deactivateAccount}>Deactivate account</button><button type="button" onClick={deleteAccount}>Delete account</button></div></div>
       <div className="account-accordion-list">
         <details className="account-accordion"><summary><span>Username</span><strong>{user.name || 'Not provided'}</strong><span className="accordion-chevron">›</span></summary><div className="accordion-content"><form onSubmit={saveProfile}><label htmlFor="profile-name">Username</label><div className="profile-setting-row"><input id="profile-name" value={name} onChange={(event) => setName(event.target.value)} maxLength={80} autoComplete="name" /><button className="profile-save" type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save'}</button></div>{message && <p className="profile-message" role="status">{message}</p>}</form></div></details>
         <details className="account-accordion"><summary><span>Email</span><strong>{user.email || 'Not provided'}</strong><span className="accordion-chevron">›</span></summary><div className="accordion-content"><p className="profile-note">{user.email || 'No email available'}</p><p className="profile-note">Sign-in method: {providerName}</p></div></details>

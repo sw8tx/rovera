@@ -21,7 +21,7 @@ function getCookies(request) {
 }
 
 function makeCookie(name, value, maxAge) {
-  return name + '=' + encodeURIComponent(value) + '; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=' + maxAge
+  return name + '=' + encodeURIComponent(value) + '; Domain=.rovera.xyz; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=' + maxAge
 }
 
 async function sign(value, secret) {

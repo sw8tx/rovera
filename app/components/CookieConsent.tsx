@@ -47,7 +47,7 @@ export default function CookieConsent() {
 
   if (consent && settingsOpen) {
     return (
-      <div className="cookie-overlay" role="presentation">
+      <div className="cookie-overlay" role="presentation" suppressHydrationWarning>
         <section className="cookie-settings" role="dialog" aria-modal="true" aria-labelledby="cookie-settings-title">
           <div className="cookie-heading-row">
             <div>
@@ -60,7 +60,7 @@ export default function CookieConsent() {
           <CookieRow title="Notwendig" description="Sichert Grundfunktionen und deine Einwilligungsentscheidung." locked checked />
           <CookieRow title="Analyse" description="Hilft uns, die Nutzung der Website zu verstehen." checked={analytics} onChange={setAnalytics} />
           <CookieRow title="Marketing" description="Ermöglicht personalisierte Inhalte und Werbung." checked={marketing} onChange={setMarketing} />
-          <div className="cookie-actions">
+          <div className="cookie-actions" suppressHydrationWarning>
             <button className="cookie-secondary" onClick={() => save(false, false)}>Nur notwendige</button>
             <button className="cookie-primary" onClick={() => save(analytics, marketing)}>Auswahl speichern</button>
           </div>
@@ -70,11 +70,11 @@ export default function CookieConsent() {
   }
 
   return (
-    <div className="cookie-banner" role="dialog" aria-labelledby="cookie-title">
+    <div className="cookie-banner" role="dialog" aria-labelledby="cookie-title" suppressHydrationWarning>
       <p className="cookie-kicker">Rovera</p>
       <h2 id="cookie-title">Cookies &amp; Datenschutz</h2>
       <p className="cookie-copy">Wir verwenden notwendige Speichertechnologien für die Website. Optionale Analyse- und Marketing-Cookies sind standardmäßig aus.</p>
-      <div className="cookie-actions">
+      <div className="cookie-actions" suppressHydrationWarning>
         <button className="cookie-secondary" onClick={() => save(false, false)}>Nur notwendige</button>
         <button className="cookie-secondary" onClick={() => setSettingsOpen(true)}>Einstellungen</button>
         <button className="cookie-primary" onClick={() => save(true, true)}>Alle akzeptieren</button>

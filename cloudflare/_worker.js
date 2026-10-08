@@ -157,7 +157,7 @@ async function saveUser(env, user) {
 
 async function readUser(env, id) {
   if (!env.ROVERA_DB || !id) return null
-  return env.ROVERA_DB.prepare("SELECT id, provider, email, name, picture, account_status FROM users WHERE id = ? AND account_status = 'active'").bind(id).first()
+  return env.ROVERA_DB.prepare("SELECT id, provider, email, name, picture, settings_json, account_status FROM users WHERE id = ? AND account_status = 'active'").bind(id).first()
 }
 
 function redirect(location, headers = {}) {
@@ -284,6 +284,33 @@ async function handleAuth(request, env, url) {
       return json({ ok: true })
     }
     return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST' })
+  }
+  if (url.pathname === '/api/account/preferences') {
+    const session = await readSession(request, env, env.AUTH_SECRET)
+    const user = session?.uid ? await readUser(env, session.uid) : null
+    if (!user) return json({ error: 'You must be signed in.' }, 401)
+    let settings = {}
+    try { settings = JSON.parse(user.settings_json || '{}') } catch {}
+    if (request.method === 'GET') return json({ settings })
+    if (request.method === 'PUT') {
+      const body = await readBody(request)
+      const next = { ...settings }
+      if (body.language === 'en' || body.language === 'de') next.language = body.language
+      if (body.notifications && typeof body.notifications === 'object') next.notifications = {
+        emailOrders: body.notifications.emailOrders !== false,
+        emailBuyRequests: body.notifications.emailBuyRequests !== false,
+        emailPayouts: body.notifications.emailPayouts !== false,
+        emailSecurity: body.notifications.emailSecurity !== false,
+        websiteOrders: body.notifications.websiteOrders !== false,
+        websiteBuyRequests: body.notifications.websiteBuyRequests !== false,
+        websitePayouts: body.notifications.websitePayouts !== false,
+        websiteSecurity: body.notifications.websiteSecurity !== false,
+      }
+      if (typeof body.newsletter === 'boolean') next.newsletter = body.newsletter
+      await env.ROVERA_DB.prepare('UPDATE users SET settings_json = ?, updated_at = ? WHERE id = ?').bind(JSON.stringify(next), Date.now(), user.id).run()
+      return json({ settings: next })
+    }
+    return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, PUT' })
   }
   if (url.pathname === '/api/account/deactivate' && request.method === 'POST') {
     const session = await readSession(request, env, env.AUTH_SECRET)

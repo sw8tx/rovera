@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}<CookieConsent /></body>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>{children}<CookieConsent /></body>
     </html>
   );
 }

@@ -1,7 +1,9 @@
+import Link from 'next/link'
+
 export default function RefundPage() {
   return (
     <main className="legal-page">
-      <nav aria-label="Legal pages"><a href="/">Rovera</a><a href="/tos">Terms</a><a href="/privacy">Privacy</a></nav>
+      <nav aria-label="Legal pages"><Link href="/">Rovera</Link><Link href="/tos">Terms</Link><Link href="/privacy">Privacy</Link></nav>
       <article className="legal-content">
         <h1>Refunds</h1>
         <p>Last updated: September 30, 2026</p>

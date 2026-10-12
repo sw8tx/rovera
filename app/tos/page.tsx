@@ -1,7 +1,9 @@
+import Link from 'next/link'
+
 export default function TermsPage() {
   return (
     <main className="legal-page">
-      <nav aria-label="Legal pages"><a href="/">Rovera</a><a href="/privacy">Privacy</a><a href="/refund">Refund</a></nav>
+      <nav aria-label="Legal pages"><Link href="/">Rovera</Link><Link href="/privacy">Privacy</Link><Link href="/refund">Refund</Link></nav>
       <article className="legal-content">
         <h1>Terms</h1>
         <p>Last updated: September 30, 2026</p>

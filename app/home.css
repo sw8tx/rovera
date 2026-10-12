@@ -1,0 +1,485 @@
+.rv-home {
+  min-height: 100vh;
+  overflow: clip;
+  background: #fff;
+  color: #171717;
+  font-family: "Manrope Variable", Arial, sans-serif;
+}
+
+.rv-home .brand-image { filter: none; }
+
+.rv-home .rv-hero {
+  position: relative;
+  height: 215svh;
+  --orbit-progress: 0;
+}
+
+.rv-home .rv-hero-sticky {
+  position: sticky;
+  top: 0;
+  isolation: isolate;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 64% 55%, #e8e9e4 0%, #fff 58%);
+}
+
+.rv-home .rv-hero h1 {
+  position: absolute;
+  z-index: 2;
+  top: 20%;
+  left: 9%;
+  margin: 0;
+  font-size: clamp(76px, 9.5vw, 156px);
+  font-weight: 500;
+  line-height: 0.97;
+  letter-spacing: -0.075em;
+  pointer-events: none;
+  transform: translateY(calc(var(--orbit-progress) * -28px));
+}
+
+.rv-home .rv-hero h1 span {
+  color: #8a8d84;
+}
+
+.rv-home .rv-orbit {
+  position: absolute;
+  z-index: 1;
+  top: 12%;
+  left: 36%;
+  width: 60%;
+  height: 76%;
+  transform: translateY(calc(var(--orbit-progress) * 16px)) scale(var(--logo-scale, 1));
+  transform-origin: 50% 52%;
+  filter: drop-shadow(0 32px 30px rgba(31, 33, 34, 0.16));
+  transition: filter 120ms linear;
+}
+
+.rv-home .rv-orbit-fallback {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.68);
+  transition: opacity 0.4s;
+}
+
+.rv-home .rv-orbit.is-ready .rv-orbit-fallback {
+  opacity: 0;
+}
+
+.rv-home .rv-orbit-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.rv-home .rv-orbit-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rv-home .rv-scroll-wave {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: clamp(220px, 38vh, 420px);
+  overflow: visible;
+  pointer-events: none;
+  transform: translate3d(0, calc((1 - var(--orbit-progress)) * 100%), 0);
+  will-change: transform;
+}
+
+.rv-home .marketplace-footer {
+  position: relative;
+  z-index: 2;
+}
+
+.rv-home > .marketplace-footer {
+  margin-top: 0;
+  padding-top: 92px;
+  border-top: 0;
+  background: #171717;
+}
+
+.rv-home .rv-countdown {
+  position: relative;
+  z-index: 1;
+  padding: clamp(76px, 9vw, 116px) 24px clamp(84px, 10vw, 128px);
+  background: transparent;
+  color: #171717;
+  text-align: center;
+}
+
+.rv-home .rv-countdown::before {
+  display: none;
+}
+
+.rv-home .rv-countdown-inner {
+  position: relative;
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+
+.rv-home .rv-countdown-kicker,
+.rv-home .rv-countdown-date {
+  color: #686963;
+}
+
+.rv-home .rv-countdown-kicker {
+  margin: 0 0 13px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.rv-home .rv-countdown h2 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 56px);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+}
+
+.rv-home .rv-countdown-date {
+  margin: 10px 0 38px;
+  font-size: 14px;
+}
+
+.rv-home .rv-countdown-clock {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
+  gap: 0;
+  width: min(780px, 100%);
+  margin: 0 auto;
+}
+
+.rv-home .rv-countdown-unit {
+  min-width: 0;
+  padding: 4px clamp(10px, 2vw, 26px);
+  border-left: 1px solid #e6e6e2;
+}
+
+.rv-home .rv-countdown-unit:first-child {
+  border-left: 0;
+}
+
+.rv-home .rv-countdown-value {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1px, 0.16vw, 3px);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(38px, 6vw, 68px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+}
+
+.rv-home .rv-countdown-digit {
+  display: inline-block;
+  min-width: 0.68em;
+  padding: 0.04em 0;
+  transform-origin: 50% 50%;
+  animation: rv-countdown-flip 560ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  backface-visibility: hidden;
+}
+
+.rv-home .rv-countdown-label {
+  display: block;
+  margin-top: 11px;
+  color: #686963;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+@keyframes rv-countdown-flip {
+  0% { opacity: 0.4; transform: perspective(180px) rotateX(-70deg) translateY(-4px); }
+  65% { opacity: 1; transform: perspective(180px) rotateX(9deg) translateY(1px); }
+  100% { opacity: 1; transform: perspective(180px) rotateX(0) translateY(0); }
+}
+
+.rv-home > .marketplace-footer::before,
+.rv-home > .marketplace-footer::after {
+  display: none;
+}
+
+@media (min-width: 1800px) {
+  .rv-home .rv-hero h1 {
+    left: calc(50% - 650px);
+  }
+}
+
+.rv-home .mobile-menu { display: none; }
+
+@media (max-width: 900px) {
+  .rv-home .mobile-menu {
+    position: relative;
+    display: block;
+    margin-left: auto;
+  }
+
+  .rv-home .mobile-menu summary {
+    padding: 9px 12px;
+    border: 1px solid #deded9;
+    border-radius: 8px;
+    color: #333;
+    font-size: 12px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .rv-home .mobile-menu summary::-webkit-details-marker { display: none; }
+
+  .rv-home .mobile-menu nav {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 8px);
+    right: 0;
+    display: grid;
+    min-width: 190px;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid #deded9;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+  }
+
+  .rv-home .mobile-menu nav a {
+    padding: 10px;
+    border-radius: 6px;
+    color: #333;
+    font-size: 12px;
+    text-decoration: none;
+  }
+
+  .rv-home .mobile-menu nav a:hover,
+  .rv-home .mobile-menu nav a:focus-visible { background: #f2f2ef; }
+
+  .rv-home .rv-hero h1 {
+    top: 21%;
+    left: 6%;
+    font-size: clamp(64px, 10.5vw, 98px);
+  }
+
+  .rv-home .rv-orbit {
+    left: 29%;
+    width: 70%;
+  }
+}
+
+@media (max-width: 600px) {
+  .rv-home .rv-hero {
+    height: 185svh;
+  }
+
+  .rv-home .rv-hero-sticky {
+    min-height: 560px;
+    background: radial-gradient(ellipse at 50% 55%, #e8e9e4 0%, #fff 66%);
+  }
+
+  .rv-home .rv-hero h1 {
+    top: 18%;
+    left: 7%;
+    font-size: clamp(54px, 12.5vw, 78px);
+  }
+
+  .rv-home .rv-orbit {
+    top: 33%;
+    left: 8%;
+    width: 88%;
+    height: 54%;
+  }
+
+  .rv-home .rv-scroll-wave {
+    height: 225px;
+  }
+
+  .rv-home .rv-countdown {
+    padding: 82px 18px 96px;
+  }
+
+  .rv-home .rv-countdown-date {
+    margin-bottom: 30px;
+  }
+
+  .rv-home .rv-countdown-clock {
+    grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .rv-home .rv-countdown-unit {
+    padding: 4px 5px;
+  }
+
+  .rv-home .rv-countdown-value {
+    gap: 2px;
+    font-size: clamp(25px, 8.5vw, 39px);
+  }
+
+  .rv-home .rv-countdown-digit {
+    min-width: 0.62em;
+  }
+
+  .rv-home .rv-countdown-label {
+    margin-top: 12px;
+    font-size: 7px;
+    letter-spacing: 0.08em;
+  }
+
+  .rv-home .marketplace-footer {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+
+.rv-home .footer-inline-icons {
+  position: relative;
+  display: flex !important;
+  height: auto !important;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  overflow: visible !important;
+}
+
+.rv-home .footer-motion-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #b8b8b4;
+  font-size: 10px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.rv-home .footer-motion-control input {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  accent-color: #f4f4f0;
+}
+
+.rv-home .footer-inline-icons:has(.footer-motion-control input:checked) .footer-icon-track,
+.rv-home .footer-inline-icons:has(.footer-motion-control input:checked) .payment-icon {
+  animation-play-state: paused !important;
+}
+
+@media (max-width: 700px) {
+  .rv-home.marketplace-page > .marketplace-footer {
+    padding: 76px 20px 24px;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer > .footer-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "about about"
+      "market support"
+      "information social";
+    gap: 24px 20px;
+    padding-bottom: 28px;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-about {
+    grid-area: about;
+    display: block;
+    min-width: 0;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-brand .brand-image {
+    filter: none;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-about p {
+    max-width: none;
+    margin-top: 10px;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-column {
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-column:nth-child(2) {
+    grid-area: market;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-column:nth-child(3) {
+    grid-area: support;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-column:nth-child(4) {
+    grid-area: information;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-social {
+    position: static;
+    grid-area: social;
+    align-self: start;
+    justify-content: flex-end;
+    margin: 0;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer > .footer-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 14px;
+    padding-top: 18px;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-meta {
+    justify-content: center;
+    gap: 10px 14px;
+    text-align: center;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer .footer-inline-icons {
+    order: 0;
+    justify-self: center;
+  }
+
+  .rv-home.marketplace-page > .marketplace-footer > .footer-bottom > span {
+    justify-self: center;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rv-home .rv-hero {
+    height: auto;
+  }
+
+  .rv-home .rv-hero-sticky {
+    position: relative;
+  }
+
+  .rv-home .rv-orbit-fallback {
+    transition: none;
+  }
+
+  .rv-home .rv-countdown-digit {
+    animation: none;
+  }
+
+  .rv-home .footer-icon-track,
+  .rv-home .footer-inline-icons .payment-icon,
+  .rv-home .footer-icon {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .rv-home .footer-motion-control { display: none; }
+
+  .rv-home .rv-scroll-wave {
+    display: none;
+  }
+}

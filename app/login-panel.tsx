@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type SessionUser = {
   id?: string
@@ -29,12 +29,19 @@ export default function LoginPanel() {
   const [emailSent, setEmailSent] = useState(false)
   const [emailBusy, setEmailBusy] = useState(false)
   const [emailError, setEmailError] = useState('')
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLElement>(null)
+  const openerRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     const authError = new URLSearchParams(window.location.search).get('authError')
-    if (authError === 'discord_denied' || authError === 'discord_failed') {
-      setOpen(true)
-      setEmailError(authError === 'discord_denied' ? 'Discord-Anmeldung abgebrochen.' : 'Discord-Anmeldung konnte nicht abgeschlossen werden.')
+    if (authError === 'discord_denied' || authError === 'discord_failed' || authError === 'account_deactivated') {
+      window.requestAnimationFrame(() => {
+        setOpen(true)
+        setEmailError(authError === 'account_deactivated'
+          ? 'This account is temporarily deactivated. Contact help@rovera.xyz to request reactivation.'
+          : authError === 'discord_denied' ? 'Discord-Anmeldung abgebrochen.' : 'Discord-Anmeldung konnte nicht abgeschlossen werden.')
+      })
       window.history.replaceState({}, '', window.location.pathname)
     }
     fetch('/api/auth/session', { credentials: 'same-origin' })
@@ -43,6 +50,53 @@ export default function LoginPanel() {
       .catch(() => setUser(null))
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    if (!open) return
+    const overlay = overlayRef.current
+    const dialog = dialogRef.current
+    if (!overlay || !dialog) return
+    const activeDialog = dialog
+    const inerted: Array<{ element: HTMLElement; inert: boolean; ariaHidden: string | null }> = []
+    let branch: HTMLElement | null = overlay
+    while (branch) {
+      const parent: HTMLElement | null = branch.parentElement
+      if (!parent) break
+      for (const sibling of Array.from(parent.children)) {
+        if (sibling === branch || !(sibling instanceof HTMLElement)) continue
+        inerted.push({ element: sibling, inert: sibling.inert, ariaHidden: sibling.getAttribute('aria-hidden') })
+        sibling.inert = true
+        sibling.setAttribute('aria-hidden', 'true')
+      }
+      if (parent === document.body) break
+      branch = parent
+    }
+    const focusables = () => Array.from(activeDialog.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'))
+    window.requestAnimationFrame(() => (focusables()[0] || activeDialog).focus())
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setOpen(false)
+      } else if (event.key === 'Tab') {
+        const items = focusables()
+        if (!items.length) { event.preventDefault(); activeDialog.focus(); return }
+        const first = items[0]
+        const last = items[items.length - 1]
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus() }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus() }
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      for (const item of inerted) {
+        item.element.inert = item.inert
+        if (item.ariaHidden === null) item.element.removeAttribute('aria-hidden')
+        else item.element.setAttribute('aria-hidden', item.ariaHidden)
+      }
+      if (openerRef.current?.isConnected) openerRef.current.focus()
+    }
+  }, [open])
 
   function startDiscordLogin() {
     const initialUserId = user?.id || ''
@@ -110,15 +164,15 @@ export default function LoginPanel() {
 
   return (
     <>
-      <button className="login-button" type="button" onClick={() => setOpen(true)}>
+      <button className="login-button" type="button" aria-haspopup="dialog" aria-expanded={open} onClick={(event) => { openerRef.current = event.currentTarget; setOpen(true) }}>
         Log in
       </button>
 
       {open && (
-        <div className="login-overlay" role="presentation" onMouseDown={(event) => {
+        <div ref={overlayRef} className="login-overlay" role="presentation" onMouseDown={(event) => {
           if (event.currentTarget === event.target) setOpen(false)
         }}>
-          <section className="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title">
+          <section ref={dialogRef} className="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title" tabIndex={-1}>
             <button className="login-close" type="button" aria-label="Close login" onClick={() => setOpen(false)}>×</button>
             <p className="login-kicker">ROVERA ACCOUNT</p>
             <h2 id="login-title">Welcome back</h2>
@@ -133,7 +187,7 @@ export default function LoginPanel() {
               <p className="login-note">We&apos;ll send a one-time code from help@rovera.xyz.</p>
             </> : <>
               <label className="login-label" htmlFor="login-code">Enter your code</label>
-              <input className="login-input login-code-input" id="login-code" type="text" value={code} onChange={(event) => setCode(event.target.value.toUpperCase())} placeholder="RO-4028" maxLength={7} autoComplete="one-time-code" />
+              <input className="login-input login-code-input" id="login-code" type="text" value={code} onChange={(event) => setCode(event.target.value.toUpperCase())} placeholder="RO-123456" maxLength={9} autoComplete="one-time-code" />
               <button className="email-login" type="button" onClick={verifyEmailCode} disabled={emailBusy || !code}>{emailBusy ? 'Checking…' : 'Verify code'}</button>
               <p className="login-note">The code is valid for 8 minutes. Sent to {email}.</p>
             </>}
